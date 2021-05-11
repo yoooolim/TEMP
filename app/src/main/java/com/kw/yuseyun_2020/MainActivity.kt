@@ -1,4 +1,4 @@
-package com.kw.yuseyun_2020
+package com.kw.yuseyun_2020;
 
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager.PERMISSION_GRANTED
@@ -40,7 +40,8 @@ class MainActivity : FragmentActivity(), OnMapReadyCallback {
             "[5]   dummy",
             "[6]   dummy",
             "[7]   dummy",
-            "[8]   dummy"
+            "[8]   dummy",
+            "[9]   dummy"
     )
 
     //private val candidate: Candidate = Candidate()
