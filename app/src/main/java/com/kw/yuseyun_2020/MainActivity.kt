@@ -3,14 +3,13 @@ package com.kw.yuseyun_2020
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.PointF
 import android.location.Location
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
 import android.util.Pair
 import android.view.View
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.annotation.UiThread
 import androidx.core.app.ActivityCompat
@@ -98,6 +97,24 @@ class MainActivity : FragmentActivity(), OnMapReadyCallback {
         setRV()
         setAdapter()
 
+        main_panel.addPanelSlideListener(object: SlidingUpPanelLayout.PanelSlideListener {
+            override fun onPanelSlide (panel : View?, slideOffset : Float ) {
+                //
+            }
+
+            override fun onPanelStateChanged(panel: View?, previousState: SlidingUpPanelLayout.PanelState?, newState: SlidingUpPanelLayout.PanelState?) {
+                //onPanelSlide(main_panel, 0.0f)
+                if (main_panel.panelState == SlidingUpPanelLayout.PanelState.EXPANDED) {
+                    val lp = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT)
+                    recyclerView.layoutParams = lp
+                    System.out.println("open!")
+                } else {
+                    val lp = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 800)
+                    recyclerView.layoutParams = lp
+                    System.out.println("closed!")
+                }
+            }
+        })
 
     }
 

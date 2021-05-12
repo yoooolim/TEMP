@@ -9,6 +9,7 @@
     android:background="#00FFFFFF"
     android:gravity="bottom"
     sothree:umanoDragView="@id/swipe_tip"
+    sothree:umanoScrollableView="@id/recyclerView"
     sothree:umanoOverlay="true"
     sothree:umanoPanelHeight="300dp"
     sothree:umanoShadowHeight="10dp"
@@ -52,12 +53,15 @@
 
         </LinearLayout>
 
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <RelativeLayout
+            android:id = "@+id/relativeLayoutRV"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            />
+            android:layout_height="match_parent">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="260dp"/>
+        </RelativeLayout>
 
     </LinearLayout>
 
