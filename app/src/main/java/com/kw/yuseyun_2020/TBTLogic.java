@@ -13,8 +13,13 @@ public class TBTLogic {
         ArrayList<Guidance> guidances = returnArrOfGuidance (routeNodes);
         /*guidances.add(0, new Guidance(routeNodes.get(0).getNodeID(), -1,
                 "[출발] " + RoadNetwork.getPOI(RoadNetwork.getPOIID(-1, routeNodes.get(0).getNodeID(), -1)).getName()));*/
-        guidances.add(new Guidance(routeNodes.get(routeNodes.size()-1).getNodeID(), -1,
-                "이건나오면안되는뎅!"));
+
+        guidances.add(0, new Guidance(routeNodes.get(0).getNodeID(), -2,
+                RoadNetwork.startPOI));
+
+        guidances.add(new Guidance(routeNodes.get(routeNodes.size()-1).getNodeID(), -3,
+                RoadNetwork.endPOI));
+
         return guidances;
     }
     public static ArrayList<Guidance> returnArrOfGuidance (ArrayList<Node> routeNodes) {
@@ -96,7 +101,6 @@ public class TBTLogic {
                     }
                     break;
                 }
-
             }
 
             // 연속 직진인 상태라면 업데이트된 s, e, c로 계산!

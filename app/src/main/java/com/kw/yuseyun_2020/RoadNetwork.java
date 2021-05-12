@@ -10,14 +10,18 @@ import java.util.List;
 public class RoadNetwork {
 
     // 데이터를 보관할 ArrayList들을 담는 class.. >> 그냥 public으로 만들었다!
-    public ArrayList<Node> nodeArrayList = new ArrayList<>();
-    public ArrayList<Link> linkArrayList = new ArrayList<>();
+    public static ArrayList<Node> nodeArrayList = new ArrayList<>();
+    public static ArrayList<Link> linkArrayList = new ArrayList<>();
     public static ArrayList<POI> poiArrayList = new ArrayList<>();
 
-    public ArrayList<Point> routePointArrayList = new ArrayList<>();
-    public ArrayList<Node> routeNodeArrayList = new ArrayList<>();
+    public static ArrayList<Point> routePointArrayList = new ArrayList<>();
+    public static ArrayList<Node> routeNodeArrayList = new ArrayList<>();
+
+    public static String startPOI="유네닭갈비*";
+    public static String endPOI="한아름빌라";
+
     // _nodeID를 nodeID로 가지는 node반환
-    public Node getNode (int _nodeID) {
+    public static Node getNode (int _nodeID) {
         for (Node currNode : nodeArrayList) {
             if (currNode.getNodeID() == _nodeID) {
                 return currNode;
@@ -27,7 +31,7 @@ public class RoadNetwork {
         return new Node(-1, new Point((double)-99,(double)-99));
     }
 
-    public Node getNode1 (Point nodePoint){
+    public static Node getNode1 (Point nodePoint){
         for(Node currNode : nodeArrayList){
             if(currNode.getCoordinate().getX().doubleValue() == nodePoint.getX().doubleValue()
                     && currNode.getCoordinate().getY().doubleValue() == nodePoint.getY().doubleValue())
@@ -38,7 +42,7 @@ public class RoadNetwork {
     }
 
     // _linkID를 linkID로 가지는 link반환
-    public Link getLink (int _linkID) {
+    public static Link getLink (int _linkID) {
         for (Link currLink : linkArrayList) {
             if (currLink.getLinkID() == _linkID) {
                 return currLink;
@@ -49,7 +53,7 @@ public class RoadNetwork {
     }
     // nodeID_s를 start node ID로, nodeID_e를 end node id로 가지는 가지는 link반환
     // 혹은 nodeID_e를 start node ID로, nodeID_s를 end node id로 가지는 가지는 link반환
-    public Link getLink (int nodeID_s, int nodeID_e) {
+    public static Link getLink (int nodeID_s, int nodeID_e) {
         for (Link currLink : linkArrayList) {
             if ((currLink.getStartNodeID() == nodeID_s) && (currLink.getEndNodeID() == nodeID_e)
                     || (currLink.getStartNodeID() == nodeID_e) && (currLink.getEndNodeID() == nodeID_s)) {
@@ -59,7 +63,7 @@ public class RoadNetwork {
         // 탐색에 실패한 경우 nodeId가 -1인 Link반환
         return new Link(-1,-1,-1,(double)-1);
     }
-    List<Pair<Link,Integer>> getLink1 (int nodeID) {
+    public static List<Pair<Link,Integer>>  getLink1 (int nodeID) {
         List<Pair<Link,Integer>> pairs = new ArrayList<>();
         for (Link currLink : linkArrayList) {
             if (currLink.getStartNodeID() == nodeID) {
@@ -123,13 +127,23 @@ public class RoadNetwork {
         return -1;
     }
 
+    // poi 이름 받아서 해당 poi와 가장 가까운 node id 반환
+    public static int getPOIIDByPoiName (String poiname) {
+        for (POI poi : poiArrayList) {
+            if (poi.getName().equals(poiname)) {
+                return poi.getPOIID();
+            }
+        }
+        return -1;
+    }
+
     // testNo에 맞게 경로 Point로 생성하는 작업
     // 아직  startNode가 닿는지 endNode가 닿는지에 따라 순서대로/역순으로 나오는 로직은 추가 안함
     /*왼쪽에서 오른쪽으로 가는 방향만 고려함 (왼, 오를 따질 수 없는 경우는 아래에서 위로 가는 방향만 고려)
      *되는 루트 →, ↑, ↗,↘
      *안되는 루트: ←, ↓, ↙, ↖
      * */
-    public ArrayList<Point> routePoints (int testNo) {
+    public static ArrayList<Point> routePoints (int testNo) {
         ArrayList<Point> routePoints = new ArrayList<>();
 
         if(testNo == 1){
@@ -173,9 +187,9 @@ public class RoadNetwork {
             }
             routeNodeArrayList.add(getNode(routeNodes[routeNodes.length-1])); // 새로 추가!
         } else if(testNo == 4){
-            int routeStartNode = getNodeIDByPoiName("유네닭갈비*");
-            int routeEndNode = getNodeIDByPoiName("한아름빌라");
-            int[] routeNodes = {routeStartNode, 65, 4, 5, 6, 2, routeEndNode};
+            int routeStartNode = getNodeIDByPoiName(startPOI);
+            int routeEndNode = getNodeIDByPoiName(endPOI);
+            int[] routeNodes = {routeStartNode, 65, 4, 5, 6, routeEndNode};
             for (int i=0; i<routeNodes.length-1; i++) {
                 routeNodeArrayList.add(getNode(routeNodes[i])); /// 새로 추가!
                 Link routelink = getLink(routeNodes[i], routeNodes[i+1]); //두 노드를 끝으로 하는 링크 반환
@@ -201,7 +215,7 @@ public class RoadNetwork {
 
     // 우리 route node만 입력 해도 실제 경로 쭈르륵 떠야 해서 이 부분에 involving point list 살짝 변경해서 넣음
     // GPS데이터 생성을 위한 Point.linkID 설정하는 코드 추가
-    public ArrayList<Point> getInvolvingPointList(Point start, Point end, Double weight){
+    public static ArrayList<Point> getInvolvingPointList(Point start, Point end, Double weight){
 
         //involving points 구하기
 
@@ -227,7 +241,7 @@ public class RoadNetwork {
         return involvingPointList;
     }
 
-    void printRoadNetwork() {
+    public static void printRoadNetwork() {
 
         System.out.println("[RoadNetwork] print roadNetwork\n----node----");
         for (Node node: nodeArrayList) {
@@ -237,9 +251,13 @@ public class RoadNetwork {
         for (Link link: linkArrayList) {
             System.out.println(link);
         }
+        System.out.println("----poi----");
+        for (POI poi: poiArrayList) {
+            System.out.println(poi);
+        }
     }
 
-    public ArrayList<Node> getRouteNodeArrayList() {
+    public static ArrayList<Node> getRouteNodeArrayList() {
         return routeNodeArrayList;
     }
 }

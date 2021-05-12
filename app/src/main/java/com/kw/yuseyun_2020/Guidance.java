@@ -36,4 +36,9 @@ public class Guidance {
     public void setNodeID(int nodeID) {
         this.nodeID = nodeID;
     }
+
+    @Override
+    public String toString () {
+        return "\"" + sentence + "\", nodeID: " + nodeID + ", direction: " + direction + " |";
+    }
 }

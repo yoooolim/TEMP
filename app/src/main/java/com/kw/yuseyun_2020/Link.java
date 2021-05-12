@@ -102,8 +102,8 @@ public class Link {
     //////////////////////////////////////
 
     //  [VERIFIED] 이 링크의 startNode(이 아이)와 이웃하는(이 아이를 startNode혹은 endNode로 가지는) links 출력
-    public ArrayList<Link> linksNeighborOnStartNode (RoadNetwork roadNetwork) {
-        ArrayList<Link> result = roadNetwork.getNode(startNodeID).includingLinks(roadNetwork.linkArrayList);
+    public ArrayList<Link> linksNeighborOnStartNode () {
+        ArrayList<Link> result = RoadNetwork.getNode(startNodeID).includingLinks(RoadNetwork.linkArrayList);
         for (int i=0;i<result.size();i++) {
             Link l = result.get(i);
             if (l.getLinkID() == linkID) {
@@ -115,8 +115,8 @@ public class Link {
     }
 
     //  [VERIFIED] 이 링크의 endNode(이 아이)와 이웃하는(이 아이를 startNode혹은 endNode로 가지는) links 출력
-    public ArrayList<Link> linksNeighborOnEndNode (RoadNetwork roadNetwork) {
-        ArrayList<Link> result =  roadNetwork.getNode(endNodeID).includingLinks(roadNetwork.linkArrayList);
+    public ArrayList<Link> linksNeighborOnEndNode () {
+        ArrayList<Link> result =  RoadNetwork.getNode(endNodeID).includingLinks(RoadNetwork.linkArrayList);
         for (int i=0;i<result.size();i++) {
             Link l = result.get(i);
             if (l.getLinkID() == linkID) {
@@ -128,18 +128,18 @@ public class Link {
     }
 
     //  [VERIFIED] 이 링크의 startNode endNode(이 아이)와 이웃하는(이 아이를 startNode혹은 endNode로 가지는) links 출력
-    public ArrayList<Link> linksNeighborOnStartOrEndNode (RoadNetwork roadNetwork) {
+    public ArrayList<Link> linksNeighborOnStartOrEndNode () {
         ArrayList<Link> resultLinks = new ArrayList<>();
-        resultLinks.addAll(linksNeighborOnStartNode(roadNetwork));
-        resultLinks.addAll(linksNeighborOnEndNode(roadNetwork));
+        resultLinks.addAll(linksNeighborOnStartNode());
+        resultLinks.addAll(linksNeighborOnEndNode());
 
         return resultLinks;
     }
 
     // 11/20에 만듦: param으로 받은 link와 이 링크가 이웃하는지 여부 출력
-    public boolean isLinkNextTo(RoadNetwork rn, int _linkID) {
-        if (this.linksNeighborOnStartOrEndNode(rn) != null) {
-            for (Link l : this.linksNeighborOnStartOrEndNode(rn)) {
+    public boolean isLinkNextTo(int _linkID) {
+        if (this.linksNeighborOnStartOrEndNode() != null) {
+            for (Link l : this.linksNeighborOnStartOrEndNode()) {
                 if (l.getLinkID() == _linkID)
                     return true;
             }
@@ -147,30 +147,30 @@ public class Link {
     }
 
     //두 링크가 연결되어있을때 연결되어있는 노드
-    public Point isLinkNextToPoint(RoadNetwork rn, Link _linkID){
+    public Point isLinkNextToPoint(Link _linkID){
         Point linked_point = new Point(0.0, 0.0);
 
         if (this.getStartNodeID() == _linkID.getStartNodeID()) {
-            linked_point = rn.getNode(this.getStartNodeID()).getCoordinate(); //point 반환
+            linked_point = RoadNetwork.getNode(this.getStartNodeID()).getCoordinate(); //point 반환
         }
         else if(this.getStartNodeID() == _linkID.getEndNodeID()){
-            linked_point = rn.getNode(this.getStartNodeID()).getCoordinate(); //point 반환
+            linked_point = RoadNetwork.getNode(this.getStartNodeID()).getCoordinate(); //point 반환
         }
         else if(this.getEndNodeID() == _linkID.getStartNodeID()){
-            linked_point = rn.getNode(this.getEndNodeID()).getCoordinate(); //point 반환
+            linked_point = RoadNetwork.getNode(this.getEndNodeID()).getCoordinate(); //point 반환
         }
         else if(this.getEndNodeID() == _linkID.getEndNodeID()){
-            linked_point = rn.getNode(this.getEndNodeID()).getCoordinate(); //point 반환
+            linked_point = RoadNetwork.getNode(this.getEndNodeID()).getCoordinate(); //point 반환
         }
 
         return linked_point;
     }
 
     // 11/20에 만듦: 이 링크와 이웃한 링크 개수 출력
-    public int nextLinksNum(RoadNetwork rn) {
+    public int nextLinksNum() {
         int n = 0;
-        if (this.linksNeighborOnStartOrEndNode(rn) != null) {
-            for (Link l : this.linksNeighborOnStartOrEndNode(rn)) {
+        if (this.linksNeighborOnStartOrEndNode() != null) {
+            for (Link l : this.linksNeighborOnStartOrEndNode()) {
                 n++;
             }
         } return n;

@@ -10,7 +10,7 @@ public class Transition {
         return Math.sqrt(Math.pow(a.getX()-b.getX(),2)+Math.pow(a.getY()-b.getY(),2));
     }//유클리드 거리 구하기*/
 
-    public static Double routeDistanceofPoints(Candidate pre_matching, Candidate cand, RoadNetwork roadNetwork) {
+    public static Double routeDistanceofPoints(Candidate pre_matching, Candidate cand) {
         double routeDistance;
         //Point a,b는 링크 안에서의 point
 
@@ -22,9 +22,9 @@ public class Transition {
             //a,b가 다른 링크일 때
         else {
             //case 1: a,b가 다른 링크이고 두 링크가 맞닿아 있을때
-            if (pre_matching.getInvolvedLink().isLinkNextTo(roadNetwork, cand.getInvolvedLink().getLinkID())) {
+            if (pre_matching.getInvolvedLink().isLinkNextTo(cand.getInvolvedLink().getLinkID())) {
                 Point linked_point = new Point(0.0, 0.0); //두 링크가 만나는 점
-                linked_point = pre_matching.getInvolvedLink().isLinkNextToPoint(roadNetwork, cand.getInvolvedLink());
+                linked_point = pre_matching.getInvolvedLink().isLinkNextToPoint(cand.getInvolvedLink());
                 routeDistance = Calculation.calDistance(pre_matching.getPoint(), linked_point) + Calculation.calDistance(cand.getPoint(), linked_point);
                 //a와 두 링크가 만나는 점까지 거리 + b와 두 링크가 만나는 점까지 거리
             }
@@ -38,7 +38,7 @@ public class Transition {
         return routeDistance;
     }//경로상의 거리 구하기
 
-    public static double Transition_pro(Point gps_pre, Point gps, Candidate pre_candidate, Candidate candidate, RoadNetwork roadNetwork) {
+    public static double Transition_pro(Point gps_pre, Point gps, Candidate pre_candidate, Candidate candidate) {
 
         double tp_gps_distance, tp_candidate_distance;
         double dt = 0;
@@ -51,7 +51,7 @@ public class Transition {
         //case 1 : 유클리드 거리
         //tp_candidate_distance = Calculation.calDistance(matching_pre.getPoint(), candidate.getPoint()); //유클리드 거리 (원래 coordDistanceOfPo)
         //case 2 : 경로상의 거리
-        tp_candidate_distance = routeDistanceofPoints(pre_candidate, candidate, roadNetwork); //경로상의 거리
+        tp_candidate_distance = routeDistanceofPoints(pre_candidate, candidate); //경로상의 거리
         //이전 매칭된point와 후보의 유클리드 직선거리
         //실제 tp는 직선거리가 아니고 경로상의 거리여야함!!
 
