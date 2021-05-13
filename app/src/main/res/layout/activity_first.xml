@@ -18,70 +18,92 @@
             android:layout_height="match_parent" />
 
         <TextView
+            android:id = "@+id/title"
             android:layout_width="match_parent"
-            android:layout_height="170dp"
-            android:layout_marginBottom="560dp"
-            android:background="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:layout_height = "50dp"
+            android:text="산학연계 SW 프로젝트 유세윤팀"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="@color/blue"
+            android:background="@android:color/white"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            app:layout_constraintTop_toBottomOf="@+id/title"
+            android:weightSum="1"
+            android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/depature"
-            android:layout_width="300dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="52dp"
-            android:layout_marginLeft="52dp"
-            android:layout_marginBottom="668dp"
-            android:gravity="center_horizontal"
-            android:hint="출발지"
-            android:inputType="number"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            <LinearLayout
+                android:layout_width="314dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/destination"
-            android:layout_width="300dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="52dp"
-            android:layout_marginLeft="52dp"
-            android:layout_marginBottom="628dp"
-            android:gravity="center_horizontal"
-            android:hint="도착지"
-            android:inputType="number"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+                <EditText
+                    android:id="@+id/depature"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center"
+                    android:hint="출발지 입력"
+                    android:inputType="number"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:background="@drawable/edittext_rounded_corner_rectangle"/>
 
-        <Button
-            android:id="@+id/route_finding_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="572dp"
-            android:background="@drawable/btn_bg_ex"
-            android:text="경로 찾기"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent" />
+                <EditText
+                    android:id="@+id/destination"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center"
+                    android:hint="도착지 입력"
+                    android:inputType="number"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:background="@drawable/edittext_rounded_corner_rectangle"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/route_finding_button"
+                android:layout_width="wrap_content"
+                android:layout_height="80dp"
+                android:background="@drawable/button_rounded_corner_rectangle"
+                android:layout_weight="0.3"
+                android:text="길찾기"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_margin="10dp"
+                />
+
+        </LinearLayout>
+
 
         <Button
             android:id="@+id/map_matching_button"
-            android:layout_width="300dp"
-            app:layout_constraintHorizontal_bias="0.5"
+            android:layout_width="match_parent"
             android:layout_height="150dp"
             android:layout_gravity="center"
-            android:layout_marginBottom="24dp"
+            android:layout_margin="30dp"
             android:background="@drawable/btn_bg_ex"
-            android:text="Button"
+            android:text="경로 안내 시작"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
 </LinearLayout>

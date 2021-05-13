@@ -79,7 +79,7 @@ class Mapmatching_engine(naverMap: NaverMap) {
         //신기한 사실 = get,set 함수를 불러오지 않아도 알아서 척척박사님 알아맞춰보세요
         //여기까지 도로네트워크 생성
 
-        getNodePrint(naverMap)
+        //getNodePrint(naverMap)
 
         // GPS points와 routePoints를 저장할 ArrayList생성
         val gpsPointArrayList: ArrayList<GPSPoint> = ArrayList()
