@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class MainRvAdapter(val context: Context, val items : ArrayList<String>):
+class MainRvAdapter(var context: Context, val items : ArrayList<String>):
         RecyclerView.Adapter<MainRvAdapter.Holder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
@@ -29,5 +29,8 @@ class MainRvAdapter(val context: Context, val items : ArrayList<String>):
         fun bind (str: String, context: Context) {
             guidance_sentence?.text = str;
         }
+    }
+    fun addSentences(sentence:ArrayList<String>) {
+        this.items.addAll(sentence);
     }
 }
