@@ -7,10 +7,10 @@ public class RouteFinding {
 
     public RouteFinding(){;}
 
-    public ArrayList<Integer> dijkstra(RoadNetwork roadNetwork,ArrayList<AdjacentNode> heads,int start,int end){
+    public ArrayList<Integer> dijkstra(ArrayList<AdjacentNode> heads,int start,int end){
         ArrayList<Integer> route = new ArrayList<>();
 
-        int node_num = roadNetwork.nodeArrayList.size();
+        int node_num = RoadNetwork.nodeArrayList.size();
         double INF = 1000000.0;
         double[][] a = new double[node_num][node_num]; //전체 거리 그래프
         int path[] = new int[node_num];
@@ -80,7 +80,7 @@ public class RouteFinding {
         }
         routeLength=0;
         for(int i=0;i<route.size()-1;i++){
-            routeLength+=roadNetwork.getLink(route.get(i),route.get(i+1)).getWeight();
+            routeLength+=RoadNetwork.getLink(route.get(i),route.get(i+1)).getWeight();
         }
         return route;
     }

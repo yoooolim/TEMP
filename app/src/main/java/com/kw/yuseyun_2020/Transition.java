@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Transition {
     private static ArrayList<Double> transition_median = new ArrayList<Double>();
 
-    public static Double routeDistanceofPoints(Candidate pre_matching, Candidate cand, RoadNetwork roadNetwork) {
+    public static Double routeDistanceofPoints(Candidate pre_matching, Candidate cand) {
         double routeDistance;
         //Point a,b는 링크 안에서의 point
 

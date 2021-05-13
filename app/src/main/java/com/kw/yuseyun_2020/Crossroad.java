@@ -7,18 +7,18 @@ import java.util.ArrayList;
 public class Crossroad {
 
     //매칭된 링크가 같은지 같지 않은지 확인하는 함수
-    public static int different_Link(RoadNetwork roadNetwork, Candidate candidate_start, Candidate candidate_end) {
+    public static int different_Link(Candidate candidate_start, Candidate candidate_end) {
 
         if(candidate_start.getInvolvedLink() == candidate_end.getInvolvedLink()){
             return 0; //같은 링크에 존재 할때
         }
 
         else{ // 다른 링크에 존재할 때
-            if(candidate_start.getInvolvedLink().isLinkNextTo(roadNetwork, candidate_end.getInvolvedLink().getLinkID())){
+            if(candidate_start.getInvolvedLink().isLinkNextTo(candidate_end.getInvolvedLink().getLinkID())){
                 //node가 가지는 링크가 3개 이상일 때 갈림길이라고 판단
                 Node linked_node;
-                linked_node = candidate_start.getInvolvedLink().isLinkNextToPoint_Node(roadNetwork, candidate_end.getInvolvedLink()); //두 링크의 사이 노드
-                if(linked_node.includingLinks(roadNetwork.linkArrayList).size() > 2){
+                linked_node = candidate_start.getInvolvedLink().isLinkNextToPoint_Node(candidate_end.getInvolvedLink()); //두 링크의 사이 노드
+                if(linked_node.includingLinks(RoadNetwork.linkArrayList).size() > 2){
                     return 1; //candidate가 서로 다른 링크이고 두 링크가 맞닿아 있을때
                 }
                 else
@@ -31,9 +31,9 @@ public class Crossroad {
     }
 
     //맞닿아있는 노드 저장
-    public static void different_link_matching(RoadNetwork roadNetwork, Candidate candidate_start, Candidate candidate_end, ArrayList<Candidate> subMatching){
+    public static void different_link_matching(Candidate candidate_start, Candidate candidate_end, ArrayList<Candidate> subMatching){
         Node linked_node;
-        linked_node = candidate_start.getInvolvedLink().isLinkNextToPoint_Node(roadNetwork, candidate_end.getInvolvedLink()); //두 링크의 사이 노드
+        linked_node = candidate_start.getInvolvedLink().isLinkNextToPoint_Node(candidate_end.getInvolvedLink()); //두 링크의 사이 노드
 
         Candidate link_candidate = new Candidate(); //Node를 candidate로 작성
         link_candidate.setPoint(linked_node.getCoordinate());

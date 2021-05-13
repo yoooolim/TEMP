@@ -19,16 +19,15 @@ class Mapmatching_engine(naverMap: NaverMap) {
 
     fun for_route(naverMap: NaverMap, dir:String, start : Int, end : Int): ArrayList<Int> {
 
-        val fileIO = FileIO(dir) // 파일에서 읽어와 도로네트워크 생성
-        val roadNetwork = fileIO.generateRoadNetwork()
+        FileIO.generateRoadNetwork()
 
         // Link와 Node를 바탕으로 Adjacent List 구축
         val heads: ArrayList<AdjacentNode> = ArrayList()
-        for (i in roadNetwork.nodeArrayList.indices) {
-            val headNode = AdjacentNode(roadNetwork.nodeArrayList[i])
+        for (i in RoadNetwork.nodeArrayList.indices) {
+            val headNode = AdjacentNode(RoadNetwork.nodeArrayList[i])
             heads.add(headNode)
             val adjacentLink: MutableList<Pair<Link, Int>>? =
-                    roadNetwork.getLink1(headNode.node.nodeID) //mutableList?
+                    RoadNetwork.getLink1(headNode.node.nodeID) //mutableList?
             if (adjacentLink != null) { //안전하게 하기 위함
                 if (adjacentLink.size == 0) continue
             }
@@ -36,7 +35,7 @@ class Mapmatching_engine(naverMap: NaverMap) {
             if (adjacentLink != null) { //안전하게 하기 위함
                 for (j in adjacentLink.indices) {
                     val addNode = AdjacentNode(
-                            roadNetwork.getNode(adjacentLink[j].second), adjacentLink[j].first
+                            RoadNetwork.getNode(adjacentLink[j].second), adjacentLink[j].first
                     )
                     ptr.nextNode = addNode
                     ptr = ptr.nextNode
@@ -45,7 +44,7 @@ class Mapmatching_engine(naverMap: NaverMap) {
         }
         val routeObject = RouteFinding();
         val route : ArrayList<Int>
-        route = routeObject.dijkstra(roadNetwork,heads,start,end);
+        route = routeObject.dijkstra(heads,start,end);
         route_length = routeObject.routeLength
         return route
     }
@@ -56,16 +55,13 @@ class Mapmatching_engine(naverMap: NaverMap) {
 
         val testNo = 1 // 여기만 바꿔주면 됨 (PilotTest 2는 data 1만 존재)
 
-        val fileIO = FileIO(dir) // 파일에서 읽어와 도로네트워크 생성
-        val roadNetwork = fileIO.generateRoadNetwork()
-
         // Link와 Node를 바탕으로 Adjacent List 구축
         val heads: ArrayList<AdjacentNode> = ArrayList()
-        for (i in roadNetwork.nodeArrayList.indices) {
-            val headNode = AdjacentNode(roadNetwork.nodeArrayList[i])
+        for (i in RoadNetwork.nodeArrayList.indices) {
+            val headNode = AdjacentNode(RoadNetwork.nodeArrayList[i])
             heads.add(headNode)
             val adjacentLink: MutableList<Pair<Link, Int>>? =
-                    roadNetwork.getLink1(headNode.node.nodeID) //mutableList?
+                    RoadNetwork.getLink1(headNode.node.nodeID) //mutableList?
             if (adjacentLink != null) { //안전하게 하기 위함
                 if (adjacentLink.size == 0) continue
             }
@@ -73,7 +69,7 @@ class Mapmatching_engine(naverMap: NaverMap) {
             if (adjacentLink != null) { //안전하게 하기 위함
                 for (j in adjacentLink.indices) {
                     val addNode = AdjacentNode(
-                            roadNetwork.getNode(adjacentLink[j].second), adjacentLink[j].first
+                            RoadNetwork.getNode(adjacentLink[j].second), adjacentLink[j].first
                     )
                     ptr.nextNode = addNode
                     ptr = ptr.nextNode
@@ -83,15 +79,16 @@ class Mapmatching_engine(naverMap: NaverMap) {
         //신기한 사실 = get,set 함수를 불러오지 않아도 알아서 척척박사님 알아맞춰보세요
         //여기까지 도로네트워크 생성
 
-        getNodePrint(roadNetwork, naverMap)
+        getNodePrint(naverMap)
 
         // GPS points와 routePoints를 저장할 ArrayList생성
         val gpsPointArrayList: ArrayList<GPSPoint> = ArrayList()
-        val routePointArrayList: ArrayList<Point> // 실제 경로의 points!
+        val routePointArrayList: ArrayList<Node> // 실제 경로의 points!
         val subMatching: ArrayList<Candidate> = ArrayList()
 
         // test 번호에 맞는 routePoints생성
-        routePointArrayList = roadNetwork.routePoints(testNo)
+
+        routePointArrayList = RoadNetwork.routeNodeArrayList
 
         // window size만큼의 t-window, ... , t-1, t에서의 candidates의 arrayList
         val arrOfCandidates: ArrayList<ArrayList<Candidate>> = ArrayList()
@@ -104,7 +101,7 @@ class Mapmatching_engine(naverMap: NaverMap) {
         val gpsGenMode = 2
         println("Fixed Sliding Window Viterbi (window size: 3)")
         for (i in routePointArrayList.indices step (5)) {
-            var point: Point = routePointArrayList.get(i)
+            var point: Point = routePointArrayList.get(i).coordinate
             //println("routePoint: " + point)
             printPoint(point, Color.YELLOW, naverMap)
         }
@@ -114,13 +111,13 @@ class Mapmatching_engine(naverMap: NaverMap) {
         ////////////////////반복문 - gps 생성////////////////////////////////
         for (i in routePointArrayList.indices step (5)) {
             // 오래 걸리는 작업 수행부분
-            var point: Point = routePointArrayList.get(i)
+            var point: Point = routePointArrayList.get(i).coordinate
             val gpsPoint = GPSPoint(
                     timestamp,
                     point,
                     gpsGenMode,
                     3,
-                    roadNetwork.getLink(point.linkID).itLooksLike
+                    RoadNetwork.getLink(point.linkID).itLooksLike
             )
             printPoint(gpsPoint.point, Color.RED, naverMap) // 생성된 GPS출력(빨간색)
             //println("[MAIN] GPS: $gpsPoint")
@@ -130,8 +127,7 @@ class Mapmatching_engine(naverMap: NaverMap) {
             val candidates: ArrayList<Candidate> = ArrayList()
             candidates.addAll(
                     Candidate.findRadiusCandidate(
-                            gpsPointArrayList,
-                            gpsPoint.point, 50, roadNetwork, timestamp, emission
+                            gpsPoint.point, 50, timestamp, emission
                     )
             )
 
@@ -167,8 +163,8 @@ class Mapmatching_engine(naverMap: NaverMap) {
                             subGPSs[timestamp - 2].point,
                             subGPSs[timestamp - 1].point,
                             FSWViterbi.getMatched_sjtp().get(timestamp - 2),
-                            FSWViterbi.getMatched_sjtp().get(timestamp - 1),
-                            roadNetwork
+                            FSWViterbi.getMatched_sjtp().get(timestamp - 1)
+
                     )
                     FSWViterbi.getMatched_sjtp().get(timestamp - 2).setTp(tp)
 
@@ -210,7 +206,6 @@ class Mapmatching_engine(naverMap: NaverMap) {
                             arrOfCandidates,
                             gpsPointArrayList,
                             timestamp,
-                            roadNetwork,
                             subMatching
                     )
                     subGPSs.clear()
@@ -226,18 +221,18 @@ class Mapmatching_engine(naverMap: NaverMap) {
                     //비터비 사이즈 3일때만 가능
                     var m_size = FSWViterbi.getMatched_sjtp().size
                     //
-                    if (Crossroad.different_Link(roadNetwork, FSWViterbi.getMatched_sjtp()[m_size - 2], FSWViterbi.getMatched_sjtp()[m_size - 3]) == 1) {
+                    if (Crossroad.different_Link(FSWViterbi.getMatched_sjtp()[m_size - 2], FSWViterbi.getMatched_sjtp()[m_size - 3]) == 1) {
                         subMatching.clear() //sub 삭제
-                        Crossroad.different_link_matching(roadNetwork, FSWViterbi.getMatched_sjtp()[m_size - 2], FSWViterbi.getMatched_sjtp()[m_size - 3], subMatching)
+                        Crossroad.different_link_matching(FSWViterbi.getMatched_sjtp()[m_size - 2], FSWViterbi.getMatched_sjtp()[m_size - 3], subMatching)
                         //갈림길 가운데 노드로 매칭
                         FSWViterbi.getMatched_sjtp().removeAt(FSWViterbi.getMatched_sjtp().size - 3) //다른 링크로 매칭 x
                         FSWViterbi.getMatched_sjtp().removeAt(FSWViterbi.getMatched_sjtp().size - 2) //다른 링크로 매칭 x
                         crossroad_check = 1;
                     }
                     //
-                    else if (Crossroad.different_Link(roadNetwork, FSWViterbi.getMatched_sjtp()[m_size - 1], FSWViterbi.getMatched_sjtp()[m_size - 2]) == 1) {
+                    else if (Crossroad.different_Link( FSWViterbi.getMatched_sjtp()[m_size - 1], FSWViterbi.getMatched_sjtp()[m_size - 2]) == 1) {
                         subMatching.removeAt(subMatching.size - 1)
-                        Crossroad.different_link_matching(roadNetwork, FSWViterbi.getMatched_sjtp()[m_size - 1], FSWViterbi.getMatched_sjtp()[m_size - 2], subMatching) //갈림길 가운데 노드로 매칭
+                        Crossroad.different_link_matching(FSWViterbi.getMatched_sjtp()[m_size - 1], FSWViterbi.getMatched_sjtp()[m_size - 2], subMatching) //갈림길 가운데 노드로 매칭
                         FSWViterbi.getMatched_sjtp().removeAt(FSWViterbi.getMatched_sjtp().size - 2) //다른 링크로 매칭 x
                         crossroad_check = 1;
                     }
@@ -302,12 +297,12 @@ class Mapmatching_engine(naverMap: NaverMap) {
         //카메라 이동
     }
 
-    fun getNodePrint(roadNetwork: RoadNetwork, naverMap: NaverMap) {
-        for (i in roadNetwork.nodeArrayList.indices) { //indices 또는 index사용
+    fun getNodePrint(naverMap: NaverMap) {
+        for (i in RoadNetwork.nodeArrayList.indices) { //indices 또는 index사용
             val marker = Marker() //좌표
             marker.position = LatLng(
-                    roadNetwork.getNode(i).coordinate.y,
-                    roadNetwork.getNode(i).coordinate.x
+                    RoadNetwork.getNode(i).coordinate.y,
+                    RoadNetwork.getNode(i).coordinate.x
             ) //node 좌표 출력
             marker.icon = MarkerIcons.BLACK //색을 선명하게 하기 위해 해줌
             marker.iconTintColor = Color.BLUE //색 덧입히기
@@ -319,7 +314,7 @@ class Mapmatching_engine(naverMap: NaverMap) {
 
         var cameraUpdate = CameraUpdate.scrollTo(
                 LatLng(
-                        roadNetwork.getNode(0).coordinate.x, roadNetwork.getNode(
+                        RoadNetwork.getNode(0).coordinate.x, RoadNetwork.getNode(
                         0
                 ).coordinate.y
                 )

@@ -3,6 +3,8 @@ package com.kw.yuseyun_2020;
 
 import android.util.Pair;
 
+import com.naver.maps.map.NaverMap;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +17,7 @@ public class RoadNetwork {
     public static ArrayList<POI> poiArrayList = new ArrayList<>();
 
     public static ArrayList<Point> routePointArrayList = new ArrayList<>();
-    public static ArrayList<Node> routeNodeArrayList = new ArrayList<>();
+    public static ArrayList<Node> routeNodeArrayList = new ArrayList<>(); //경로 저장
 
     public static String startPOI="유네닭갈비*";
     public static String endPOI="한아름빌라";

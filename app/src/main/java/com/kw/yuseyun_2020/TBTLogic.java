@@ -112,6 +112,9 @@ public class TBTLogic {
                 // 다만 이전 길이 횡단보도였다면 상황이 달라짐. (횡단보도 건넌 후 직진이 가능하므로) 그건 그때 횡단보도 구현하며 반영 예정
                 // >> 횡단보도 제끼자
                 /*result.add(new Guidance(center.getNodeID(), direction, end.getName()+"까지 직진"));*/
+                if (i == routeNodes.size() - 3) {
+                    break;
+                }
                 continue;
             } else if (direction == 1) { // 좌회전
                 result.add(new Guidance(center.getNodeID(), direction,
@@ -123,8 +126,7 @@ public class TBTLogic {
                 result.add(new Guidance(center.getNodeID(), direction,
                         "Guidance 생성 오류"));
             }
-            if (i + 2 == routeNodes.size() - 1) {
-
+            if (i == routeNodes.size() - 3) {
                 break;
             }
         }

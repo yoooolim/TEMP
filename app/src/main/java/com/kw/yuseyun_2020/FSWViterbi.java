@@ -22,7 +22,7 @@ public class FSWViterbi {
 
     // gps 받아올때마다 FSW비터비로 매칭하는 메서드 -윤혜tp
     public static ArrayList<Candidate> generateMatched(int wSize, ArrayList<ArrayList<Candidate>> arrOfCandidates,
-                                                       ArrayList<GPSPoint> gpsPointArrayList, int timeStamp, RoadNetwork roadNetwork, ArrayList<Candidate> subMatching) {
+                                                       ArrayList<GPSPoint> gpsPointArrayList, int timeStamp, ArrayList<Candidate> subMatching) {
         // arrOfCandidates를 순회하며 찾은 path의 마지막을 matching_success에 추가하는 loop
         // t는 timestamp를 의미
         // subpath 생성 및 matched arraylist에 저장
@@ -44,22 +44,11 @@ public class FSWViterbi {
                 // 현재 candidate를 하나씩 순회하며
                 for (Candidate cc : curr_candidates) {
                     double tp = 0.0;
-                    tp = Transition.Transition_pro(gpsPointArrayList.get(timeStamp - 1).getPoint(), gpsPointArrayList.get(timeStamp - 3).getPoint(), cc, nc, roadNetwork);
+                    tp = Transition.Transition_pro(gpsPointArrayList.get(timeStamp - 1).getPoint(), gpsPointArrayList.get(timeStamp - 3).getPoint(), cc, nc);
                     //tp = cc.getTp();
                 nc.setEp(Emission.Emission_pro(nc, gpsPointArrayList.get(timeStamp-1).getPoint(), nc.getPoint(), timeStamp));
                 System.out.println("  nc: " + nc.getPoint() + "/ ep: " + nc.getEp());
                 // 현재 candidate를 하나씩 순회하며
-                for (Candidate cc : curr_candidates) {
-                    double tp;
-
-                    // 무조건 세정이거
-                        //System.out.println("[FSWViterbi] cc:" + cc);
-                        tp = Transition.Transition_pro(gpsPointArrayList.get(timeStamp-1).getPoint(), gpsPointArrayList.get(timeStamp-3).getPoint(), cc, nc);
-                        //tp = cc.getTp();
-
-                    //cc.setTp(tp); //tp 저장 cc -> nc로 이동할 확률을 cc에 저장 // 굳이 tp 저장할 필요 없음.
-                    //cc.setEp(Emission.Emission_pro(cc, gpsPointArrayList.get(timeStamp-2).getPoint(), nc.getPoint(), timeStamp));
-                    //이미 저장되어있으므로 저장할 필요 없음.
 
                     double prob = tp * nc.getEp();
 

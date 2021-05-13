@@ -111,10 +111,9 @@ public class Candidate {
         return point.toString();
     }
 
-    public static ArrayList<Candidate> findRadiusCandidate(ArrayList<GPSPoint> gpsPointArrayList,
-                                                           ArrayList<Candidate> matchingPointArrayList, Point center,
+    public static ArrayList<Candidate> findRadiusCandidate( Point center,
                                                            Integer Radius, int timestamp,
-                                                           Emission emission, Transition transition) {
+                                                           Emission emission) {
         //System.out.println("GPS (center) : "+ center);
         ArrayList<Candidate> resultCandidate = new ArrayList<>();
         for (int i = 0; i < RoadNetwork.linkArrayList.size(); i++) {

@@ -35,8 +35,7 @@ class Realtime_engine {
         val candidates: ArrayList<Candidate> = ArrayList()
         candidates.addAll(
                 Candidate.findRadiusCandidate(
-                        gpsPointArrayList,
-                        gpsPoint.point, 50, roadNetwork, timestamp, emission
+                        gpsPoint.point, 50,  timestamp, emission
                 )
         )//candidate 찾기
 
@@ -72,8 +71,7 @@ class Realtime_engine {
                         subGPSs[timestamp - 2].point,
                         subGPSs[timestamp - 1].point,
                         FSWViterbi.getMatched_sjtp().get(timestamp - 2),
-                        FSWViterbi.getMatched_sjtp().get(timestamp - 1),
-                        roadNetwork
+                        FSWViterbi.getMatched_sjtp().get(timestamp - 1)
                 )
                 FSWViterbi.getMatched_sjtp().get(timestamp - 2).setTp(tp)
 
@@ -114,7 +112,6 @@ class Realtime_engine {
                         arrOfCandidates,
                         gpsPointArrayList,
                         timestamp,
-                        roadNetwork,
                         subMatching
                 )
                 subGPSs.clear()
@@ -131,14 +128,12 @@ class Realtime_engine {
                 var m_size = FSWViterbi.getMatched_sjtp().size
                 //
                 if (Crossroad.different_Link(
-                                roadNetwork,
                                 FSWViterbi.getMatched_sjtp()[m_size - 2],
                                 FSWViterbi.getMatched_sjtp()[m_size - 3]
                         ) == 1
                 ) {
                     subMatching.clear() //sub 삭제
                     Crossroad.different_link_matching(
-                            roadNetwork,
                             FSWViterbi.getMatched_sjtp()[m_size - 2],
                             FSWViterbi.getMatched_sjtp()[m_size - 3],
                             subMatching
@@ -152,14 +147,12 @@ class Realtime_engine {
                 }
                 //
                 else if (Crossroad.different_Link(
-                                roadNetwork,
                                 FSWViterbi.getMatched_sjtp()[m_size - 1],
                                 FSWViterbi.getMatched_sjtp()[m_size - 2]
                         ) == 1
                 ) {
                     subMatching.removeAt(subMatching.size - 1)
                     Crossroad.different_link_matching(
-                            roadNetwork,
                             FSWViterbi.getMatched_sjtp()[m_size - 1],
                             FSWViterbi.getMatched_sjtp()[m_size - 2],
                             subMatching

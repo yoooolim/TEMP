@@ -39,7 +39,7 @@ class FirstActivity : FragmentActivity(), OnMapReadyCallback {
     val permission_request = 99
 
     //private val candidate: Candidate = Candidate()
-    private lateinit var naverMap: NaverMap
+    lateinit var naverMap: NaverMap
 
     var permissions = arrayOf(
             android.Manifest.permission.ACCESS_FINE_LOCATION,
@@ -186,9 +186,14 @@ class FirstActivity : FragmentActivity(), OnMapReadyCallback {
 
     fun pathFind() {
         val dir = filesDir.absolutePath //파일절대경로
+        FileIO.setDir(dir)
+
         var routeObject = Mapmatching_engine(naverMap)
         var route : ArrayList<Int>
         route = routeObject.for_route(naverMap,dir,in_depature.toInt(),in_destination.toInt());
+        for(i in 0..route.size-1){
+            RoadNetwork.routeNodeArrayList.add(RoadNetwork.getNode(route.get(i)));
+        }
         var str : StringBuilder? = StringBuilder()
         str?.append("Node : ")
         for(i in 1..route.size){
