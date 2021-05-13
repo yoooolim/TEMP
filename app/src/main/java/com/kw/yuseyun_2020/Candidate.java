@@ -11,7 +11,9 @@ public class Candidate {
     private double tpep;
     private double ep_median;
     private double tp_median;
+    private double max_tp_median;
     private double acc_prob;// accumulated probability (이전 최대 edge와 해당 node의 ep*tp를 곱함)
+    private double exist_tp;
 
     public int getPrev_index() {
         return prev_index;
@@ -39,6 +41,8 @@ public class Candidate {
         this.tpep=0.0;
         this.ep_median=0.0;
         this.tp_median=0.0;
+        this.max_tp_median=0.0;
+        this.exist_tp =0.0;
     }
 
     public Candidate (Point point, Link involvedLink){
@@ -49,6 +53,8 @@ public class Candidate {
         this.tpep=0.0;
         this.ep_median=0.0;
         this.tp_median=0.0;
+        this.max_tp_median=0.0;
+        this.exist_tp =0.0;
     }
 
     public void setPoint(Point point){this.point=point;}
@@ -82,6 +88,7 @@ public class Candidate {
         this.tpep=tpep;
     }
 
+    public double getTpep(){return tpep;}
 
     public void setEp_median(double ep_median) {this.ep_median = ep_median;}
 
@@ -104,17 +111,18 @@ public class Candidate {
         return point.toString();
     }
 
-    public static ArrayList<Candidate> findRadiusCandidate(ArrayList<GPSPoint> gpsPointArrayList, Point center,
-                                                           Integer Radius, RoadNetwork roadNetwork, int timestamp,
-                                                           Emission emission) {
+    public static ArrayList<Candidate> findRadiusCandidate(ArrayList<GPSPoint> gpsPointArrayList,
+                                                           ArrayList<Candidate> matchingPointArrayList, Point center,
+                                                           Integer Radius, int timestamp,
+                                                           Emission emission, Transition transition) {
         //System.out.println("GPS (center) : "+ center);
         ArrayList<Candidate> resultCandidate = new ArrayList<>();
-        for (int i = 0; i < roadNetwork.linkArrayList.size(); i++) {
+        for (int i = 0; i < RoadNetwork.linkArrayList.size(); i++) {
             //System.out.println("  위 GPS 에서 [" + roadNetwork.linkArrayList.get(i).getLinkID() + "]로 수선의발");
-            double startX = roadNetwork.nodeArrayList.get(roadNetwork.linkArrayList.get(i).getStartNodeID()).getCoordinate().getX();
-            double startY = roadNetwork.nodeArrayList.get(roadNetwork.linkArrayList.get(i).getStartNodeID()).getCoordinate().getY();
-            double endX = roadNetwork.nodeArrayList.get(roadNetwork.linkArrayList.get(i).getEndNodeID()).getCoordinate().getX();
-            double endY = roadNetwork.nodeArrayList.get(roadNetwork.linkArrayList.get(i).getEndNodeID()).getCoordinate().getY();
+            double startX = RoadNetwork.nodeArrayList.get(RoadNetwork.linkArrayList.get(i).getStartNodeID()).getCoordinate().getX();
+            double startY = RoadNetwork.nodeArrayList.get(RoadNetwork.linkArrayList.get(i).getStartNodeID()).getCoordinate().getY();
+            double endX = RoadNetwork.nodeArrayList.get(RoadNetwork.linkArrayList.get(i).getEndNodeID()).getCoordinate().getX();
+            double endY = RoadNetwork.nodeArrayList.get(RoadNetwork.linkArrayList.get(i).getEndNodeID()).getCoordinate().getY();
 
             // convert start GEO -> TM
             GeoPoint in_pt = new GeoPoint(startX, startY);
@@ -138,7 +146,7 @@ public class Candidate {
 
                 //System.out.println("dot Product : "+dotProduct1+", "+dotProduct2);
                 Candidate candidate = new Candidate();
-                candidate.setInvolvedLink(roadNetwork.linkArrayList.get(i));
+                candidate.setInvolvedLink(RoadNetwork.linkArrayList.get(i));
                 Vector2D vectorStart = new Vector2D(start_t.getX(), start_t.getY());
                 Vector2D vectorC = new Vector2D(center_t.getX(), center_t.getY()); //원점에서 시작해 center로의 vector
                 Vector2D vectorH = vectorStart.getAdded(vectorFromEndToStart.getMultiplied(
@@ -150,7 +158,7 @@ public class Candidate {
                 GeoPoint geo_vector = GeoTrans.convert(GeoTrans.TM, GeoTrans.GEO, tm_vector);
 
                 Point candiPoint = new Point(geo_vector.getX(), geo_vector.getY());
-                candiPoint.setLinkID(roadNetwork.linkArrayList.get(i).getLinkID());
+                candiPoint.setLinkID(RoadNetwork.linkArrayList.get(i).getLinkID());
                 candidate.setPoint(candiPoint); //수선의 발 vector의 x와 y값을 candidate의 point로 대입
                 GeoPoint candiPtGeo = new GeoPoint (candiPoint.getX(), candiPoint.getY());
                 if (Calculation.calDistance(center.getY(), center.getX(), candiPtGeo.getY(), candiPtGeo.getX()) > Radius)  {

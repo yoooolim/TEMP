@@ -1,17 +1,16 @@
 package com.kw.yuseyun_2020;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class FSWViterbi {
     private static final ArrayList<Candidate> matched_yhtp = new ArrayList<>();
+    private static double correctness_yhtp;
 
 
     public static ArrayList<Candidate> getMatched_sjtp() {
         return matched_sjtp;
     }
-
-    public static void setMatched_sjtp(Candidate candidate) {
+    public static void setMatched_sjtp(Candidate candidate){
         matched_sjtp.add(candidate);
     }
 
@@ -30,11 +29,11 @@ public class FSWViterbi {
         // 현재 candidates와 다음 candidates로 가는 t.p와 e.p곱 중 최대 값을 가지는 curr와 그 index를 maximum_tpep[현재]에 저장
 
         double maximum_prob = 0;
-        Candidate[] subpath = new Candidate[wSize - 1]; // path의 길이를 t로 설정
+        Candidate[] subpath = new Candidate[wSize-1]; // path의 길이를 t로 설정
         //System.out.println("yhtp debugging");
         for (int i = 0; i < wSize - 1; i++) { // i moves in window
             ArrayList<Candidate> curr_candidates = arrOfCandidates.get(i);
-            ArrayList<Candidate> next_candidates = arrOfCandidates.get(i + 1);
+            ArrayList<Candidate> next_candidates = arrOfCandidates.get(i+1);
             //System.out.println("☆origin point:" + subRPA.get(i+1));// 테스트 하려면 메서드 인자에 subGPSs추가해야함
             //System.out.println("☆GPS point: " + subGPSs.get(i));// 테스트 하려면 메서드 인자에 subRPA추가해야함
             // 다음 candidate를 하나씩 순회
@@ -47,6 +46,16 @@ public class FSWViterbi {
                     double tp = 0.0;
                     tp = Transition.Transition_pro(gpsPointArrayList.get(timeStamp - 1).getPoint(), gpsPointArrayList.get(timeStamp - 3).getPoint(), cc, nc, roadNetwork);
                     //tp = cc.getTp();
+                nc.setEp(Emission.Emission_pro(nc, gpsPointArrayList.get(timeStamp-1).getPoint(), nc.getPoint(), timeStamp));
+                System.out.println("  nc: " + nc.getPoint() + "/ ep: " + nc.getEp());
+                // 현재 candidate를 하나씩 순회하며
+                for (Candidate cc : curr_candidates) {
+                    double tp;
+
+                    // 무조건 세정이거
+                        //System.out.println("[FSWViterbi] cc:" + cc);
+                        tp = Transition.Transition_pro(gpsPointArrayList.get(timeStamp-1).getPoint(), gpsPointArrayList.get(timeStamp-3).getPoint(), cc, nc);
+                        //tp = cc.getTp();
 
                     //cc.setTp(tp); //tp 저장 cc -> nc로 이동할 확률을 cc에 저장 // 굳이 tp 저장할 필요 없음.
                     //cc.setEp(Emission.Emission_pro(cc, gpsPointArrayList.get(timeStamp-2).getPoint(), nc.getPoint(), timeStamp));

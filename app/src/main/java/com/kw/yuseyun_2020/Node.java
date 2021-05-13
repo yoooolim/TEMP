@@ -1,13 +1,17 @@
 package com.kw.yuseyun_2020;
 
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Node {
     private int nodeID; // nodeID
     private Point coordinate; // Node의 좌표
+
+    // POI 데이터
+
     //////생성자, getter, setter, toString//////
-    // ID를 String형으로 받는 Node 생성자
+    // ID를 String형으로 받는 Node 생성자/// 수정!! 인자에 name, location_num 추가
     public Node (String nodeID, Point coordinate) {
         this.nodeID = Integer.parseInt(nodeID);
         this.coordinate = coordinate;
@@ -43,7 +47,7 @@ public class Node {
     //////////////////////////////////////////////
 
     // [NOT VERIFIED] 이 노드를 startNode 혹은 endNode로 가지는 link의 arraylist 반환
-    public ArrayList<Link> includingLinks (ArrayList<Link> linkArrayList) {
+    public ArrayList<Link> includingLinks ( ArrayList<Link> linkArrayList) {
         ArrayList<Link> resultLinks = new ArrayList<>();
         for (Link link : linkArrayList) {
             if (link.getStartNodeID() == nodeID || link.getEndNodeID() == nodeID)

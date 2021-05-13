@@ -1,4 +1,5 @@
 package com.kw.yuseyun_2020;
+
 public class AdjacentNode {
     private Node node;
     private Link adjacentLink;
