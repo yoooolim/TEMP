@@ -4,10 +4,11 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class MainRvAdapter(var context: Context, val items : ArrayList<String>):
+class MainRvAdapter(var context: Context, val items : ArrayList<Guidance>):
         RecyclerView.Adapter<MainRvAdapter.Holder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
@@ -18,19 +19,42 @@ class MainRvAdapter(var context: Context, val items : ArrayList<String>):
     override fun getItemCount(): Int {
         return items.size
     }
-
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        holder?.bind(items[position], context)
+        var g = items[position]
+        holder?.bind(g, context)
     }
 
     inner class Holder(itemView: View?) : RecyclerView.ViewHolder(itemView!!) {
         val guidance_sentence = itemView?.findViewById<TextView>(R.id.textView_guidanceSentence)
+        val guidance_index = itemView?.findViewById<TextView>(R.id.textView_guidanceIndex)
+        val guidance_image = itemView?.findViewById<ImageView>(R.id.imageView_guidance)
 
-        fun bind (str: String, context: Context) {
-            guidance_sentence?.text = str;
+
+        fun bind (g: Guidance, context: Context) {
+            if (g.index.contentEquals("출발") ) {
+                guidance_image?.setBackgroundResource(R.drawable.start_for_guidance)
+                guidance_index?.text = "🏃‍"
+                guidance_index?.textSize = 16.0f
+
+            }else if (g.index.contentEquals("도착")) {
+                guidance_image?.setBackgroundResource(R.drawable.end_for_guidance)
+                guidance_index?.text = "😉"
+                guidance_index?.textSize = 16.0f
+            } else {
+                guidance_index?.setBackgroundResource(R.drawable.guidance_index)
+                if (g.direction == 0) guidance_image?.setBackgroundResource(R.drawable.go_straight_arrow)
+                else if (g.direction == 1) guidance_image?.setBackgroundResource(R.drawable.turn_left_arrow)
+                else if (g.direction == 2) guidance_image?.setBackgroundResource(R.drawable.turn_right_arrow)
+
+                guidance_index?.text = g.index
+            }
+            guidance_sentence?.text = g.sentence
+            /*guidance_index?.text = g.index
+            guidance_sentence?.text = g.sentence*/
         }
     }
-    fun addSentences(sentence:ArrayList<String>) {
-        this.items.addAll(sentence);
+    fun addGuidances(guidances:ArrayList<Guidance>) {
+        this.items.clear();
+        this.items.addAll(guidances);
     }
 }

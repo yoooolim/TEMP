@@ -22,6 +22,14 @@ public class RoadNetwork {
     public static String startPOI="유네닭갈비*";
     public static String endPOI="한아름빌라";
 
+    public static void setStartPOI(String startPOI) {
+        RoadNetwork.startPOI = startPOI;
+    }
+
+    public static void setEndPOI(String endPOI) {
+        RoadNetwork.endPOI = endPOI;
+    }
+
     // _nodeID를 nodeID로 가지는 node반환
     public static Node getNode (int _nodeID) {
         for (Node currNode : nodeArrayList) {
