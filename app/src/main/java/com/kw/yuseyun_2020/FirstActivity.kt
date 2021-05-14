@@ -3,6 +3,7 @@ package com.kw.yuseyun_2020
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.graphics.Color
 import android.location.Location
 import android.os.Bundle
 import android.os.Looper
@@ -26,6 +27,8 @@ import com.google.android.gms.location.LocationResult
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.OverlayImage
+import com.naver.maps.map.overlay.PathOverlay
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import kotlinx.android.synthetic.main.activity_first.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -74,6 +77,7 @@ class FirstActivity : FragmentActivity(), OnMapReadyCallback {
                 t1.show();
             }
             var path = pathFind()
+            printNodesToPath()
         }
     }
 
@@ -187,11 +191,14 @@ class FirstActivity : FragmentActivity(), OnMapReadyCallback {
     fun pathFind() {
         val dir = filesDir.absolutePath //파일절대경로
         FileIO.setDir(dir)
+        FileIO.generateRoadNetwork()
 
         var routeObject = Mapmatching_engine(naverMap)
         var route : ArrayList<Int>
-        route = routeObject.for_route(naverMap,dir,in_depature.toInt(),in_destination.toInt());
-        for(i in 0..route.size-1){
+        var startNodeID = RoadNetwork.getNodeIDByPoiName(in_depature)
+        var endNodeID = RoadNetwork.getNodeIDByPoiName(in_destination)
+        route = routeObject.for_route(naverMap,dir,startNodeID,endNodeID);
+        for(i in 0 until route.size){
             RoadNetwork.routeNodeArrayList.add(RoadNetwork.getNode(route.get(i)));
         }
         var str : StringBuilder? = StringBuilder()
@@ -207,4 +214,19 @@ class FirstActivity : FragmentActivity(), OnMapReadyCallback {
         t1.show()
     }
 
+    fun printNodesToPath() {
+        val path = PathOverlay()
+        var pathArr = ArrayList<LatLng>()
+        var i = 0
+        for (node in RoadNetwork.getRouteNodeArrayList()) {
+            pathArr.add(LatLng(RoadNetwork.getNode(node.nodeID).coordinate.y, RoadNetwork.getNode(node.nodeID).coordinate.x))
+        }
+        path.coords = pathArr
+        path.map = naverMap
+        path.setColor(Color.rgb(255, 192, 0));
+        path.setWidth(30);
+        path.outlineColor = Color.LTGRAY
+        path.outlineWidth = 5
+        path.patternImage = OverlayImage.fromResource(R.drawable.route_pattern)
+    }
 }
