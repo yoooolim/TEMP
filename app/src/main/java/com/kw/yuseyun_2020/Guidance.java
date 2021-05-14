@@ -5,6 +5,15 @@ public class Guidance {
     private String sentence;
     private int nodeID;
     private int direction;
+    private String index; // 출발, 도착, 1, 2, 3, 4 .. 저장
+
+    public String getIndex() {
+        return index;
+    }
+
+    public void setIndex(String index) {
+        this.index = index;
+    }
 
     public Guidance (int nodeID, int direction, String sentence) {
         this.sentence = sentence;
