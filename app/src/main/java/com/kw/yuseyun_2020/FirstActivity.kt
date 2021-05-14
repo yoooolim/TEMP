@@ -82,6 +82,7 @@ class FirstActivity : FragmentActivity(), OnMapReadyCallback {
             }
             var path = pathFind()
             printNodesToPath()
+            printStartAndEndPOIs()
             map_matching_button.visibility = View.VISIBLE
         }
     }
@@ -202,6 +203,8 @@ class FirstActivity : FragmentActivity(), OnMapReadyCallback {
         var route: ArrayList<Int>
         var startNodeID = RoadNetwork.getNodeIDByPoiName(in_depature)
         var endNodeID = RoadNetwork.getNodeIDByPoiName(in_destination)
+        RoadNetwork.startPOI = in_depature
+        RoadNetwork.endPOI = in_destination
         route = routeObject.for_route(naverMap, dir, startNodeID, endNodeID);
 
         // 0513 유네 추가 .. 뒤로가기로 여러번의 테스트 가능하도록 데이터 비움
@@ -231,10 +234,41 @@ class FirstActivity : FragmentActivity(), OnMapReadyCallback {
         }
         path.coords = pathArr
         path.map = naverMap
-        path.setColor(Color.rgb(255, 192, 0));
+        path.setColor(Color.rgb(3,107,252));
         path.setWidth(30);
         path.outlineColor = Color.LTGRAY
         path.outlineWidth = 5
         path.patternImage = OverlayImage.fromResource(R.drawable.route_pattern)
+    }
+    fun printStartAndEndPOIs() {
+        // 출발점 표시
+        val marker_s = Marker() //좌표
+        var poi_s = RoadNetwork.getPOI(RoadNetwork.getPOIIDByPoiName(RoadNetwork.startPOI)).coordinate
+        marker_s.position = LatLng(
+                poi_s.y,
+                poi_s.x
+        ) //poi 좌표 출력
+        //marker_s.icon = MarkerIcons.BLACK //색을 선명하게 하기 위해 해줌
+        //marker_s.iconTintColor = Color.GREEN //색 덧입히기
+        marker_s.icon = OverlayImage.fromResource(R.drawable.start_poi)
+        marker_s.width = 100
+        marker_s.height = 120
+        marker_s.map = naverMap //navermap에 출력
+        //marker_s.captionText = "출발"
+
+        // 도착점 표시
+        val marker_e = Marker() //좌표
+        var poi_e = RoadNetwork.getPOI(RoadNetwork.getPOIIDByPoiName(RoadNetwork.endPOI)).coordinate
+        marker_e.position = LatLng(
+                poi_e.y,
+                poi_e.x
+        ) //poi 좌표 출력
+        //marker_e.icon = MarkerIcons.BLACK //색을 선명하게 하기 위해 해줌
+        //marker_e.iconTintColor = Color.GREEN //색 덧입히기
+        marker_e.icon = OverlayImage.fromResource(R.drawable.end_poi)
+        marker_e.width = 100
+        marker_e.height = 120
+        marker_e.map = naverMap //navermap에 출력
+        //marker_e.captionText = "도착"
     }
 }
