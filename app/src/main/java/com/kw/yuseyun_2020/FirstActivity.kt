@@ -1,6 +1,7 @@
 package com.kw.yuseyun_2020
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.graphics.Color
@@ -11,6 +12,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.Toast
 import androidx.annotation.UiThread
@@ -60,6 +62,8 @@ class FirstActivity : FragmentActivity(), OnMapReadyCallback {
                 ActivityCompat.requestPermissions(this, permissions, permission_request)
         }//권한 확인
 
+        map_matching_button.visibility = View.INVISIBLE
+
         map_matching_button.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
@@ -78,6 +82,7 @@ class FirstActivity : FragmentActivity(), OnMapReadyCallback {
             }
             var path = pathFind()
             printNodesToPath()
+            map_matching_button.visibility = View.VISIBLE
         }
     }
 
@@ -191,7 +196,6 @@ class FirstActivity : FragmentActivity(), OnMapReadyCallback {
     fun pathFind() {
         val dir = filesDir.absolutePath //파일절대경로
         FileIO.setDir(dir)
-        FileIO.generateRoadNetwork()
 
         var routeObject = Mapmatching_engine(naverMap)
         var route : ArrayList<Int>
@@ -199,6 +203,11 @@ class FirstActivity : FragmentActivity(), OnMapReadyCallback {
         var endNodeID = RoadNetwork.getNodeIDByPoiName(in_destination)
         route = routeObject.for_route(naverMap,dir,startNodeID,endNodeID);
         for(i in 0 until route.size){
+        route = routeObject.for_route(naverMap,dir,in_depature.toInt(),in_destination.toInt());
+
+        // 0513 유네 추가 .. 뒤로가기로 여러번의 테스트 가능하도록 데이터 비움
+        if (!RoadNetwork.getRouteNodeArrayList().isEmpty()) RoadNetwork.routeNodeArrayList.clear();
+        for(i in 0..route.size-1){
             RoadNetwork.routeNodeArrayList.add(RoadNetwork.getNode(route.get(i)));
         }
         var str : StringBuilder? = StringBuilder()

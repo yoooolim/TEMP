@@ -11,9 +11,6 @@ public class TBTLogic {
     // direction이 -1이면 출발이거나 도착
     public static ArrayList<Guidance> returnFinalGuidances (ArrayList<Node> routeNodes) {
         ArrayList<Guidance> guidances = returnArrOfGuidance (routeNodes);
-        /*guidances.add(0, new Guidance(routeNodes.get(0).getNodeID(), -1,
-                "[출발] " + RoadNetwork.getPOI(RoadNetwork.getPOIID(-1, routeNodes.get(0).getNodeID(), -1)).getName()));*/
-
         guidances.add(0, new Guidance(routeNodes.get(0).getNodeID(), -2,
                 RoadNetwork.startPOI));
 
@@ -67,12 +64,12 @@ public class TBTLogic {
                 // [첫 지시는 무조건 직진] 첫 지시고, 이것이 직진지시지만 두 번째 지시는 직진이 아닌 경우 -> "end까지 직진"
                 else if (i == 0 && n_end.getNodeID() != routeNodes.get(routeNodes.size() - 1).getNodeID() && direction == 0) {
                     // genSentence에 n_~~~ 으로 처리한 이유: end까지 직진을 구현하기 위해, 다음의 end가 n_center인 것을 이용!
-                    result.add(new Guidance(start.getNodeID(), direction,
-                            genSentence(direction, n_start.getNodeID(), n_center.getNodeID(), n_end.getNodeID())));
+                    result.add(new Guidance(start.getNodeID(), 0,
+                            genSentence(0, n_start.getNodeID(), n_center.getNodeID(), n_end.getNodeID())));
                 }
                 // [첫 지시는 무조건 직진] 첫 지시인데 이것이 직진지시가 아닌경우, 시작노드 ID 넣고 첫 지시는 직진이라고 해야 함 -> "center까지 직진"
                 else if (i == 0) {
-                    result.add(new Guidance(start.getNodeID(), direction,
+                    result.add(new Guidance(start.getNodeID(), 0,
                             genSentence(0, start.getNodeID(), center.getNodeID(), end.getNodeID())));
                 }
 

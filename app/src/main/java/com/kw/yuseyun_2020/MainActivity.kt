@@ -94,8 +94,16 @@ class MainActivity : FragmentActivity(), OnMapReadyCallback {
         dataInit()
         //도로네트워크 생성해야됨
 
-
         ArrOfGuidance = TBTLogic.returnFinalGuidances(RoadNetwork.getRouteNodeArrayList())
+        index = 1
+        for (g in ArrOfGuidance) {
+            if (g.direction == -2) g.index = "출발"
+            else if (g.direction == -3) g.index = "도착"
+            else {
+                g.index = index.toString()
+                index++
+            }
+        }
 
         System.out.println(ArrOfGuidance)
 
@@ -126,39 +134,16 @@ class MainActivity : FragmentActivity(), OnMapReadyCallback {
         })
 
     }
-
-
-    fun generateSentenceList(): ArrayList<String> {
-        var sentenceList = ArrayList<String>();
-
-        for (g in ArrOfGuidance) {
-            var temp = ""
-            if (g.direction != -2 && g.direction != -3) {
-                temp += "[$index] "
-                temp += g.sentence
-                index++
-            } else if (g.direction == -2) {
-                temp += "[출발] "
-                temp += g.sentence
-            } else if (g.direction == -3) {
-                temp += "[도착] "
-                temp += g.sentence
-            }
-            sentenceList.add(temp);
-            System.out.println("sentence: ${temp}")
-        }
-        return sentenceList;
-    }
-
     fun setAdapter() {
-        mAdapter.addSentences(generateSentenceList());
+        //mAdapter.addSentences(generateSentenceList());
+        mAdapter.addGuidances(ArrOfGuidance);
     }
 
     fun setRV() {
         recyclerView.layoutManager = lm
         recyclerView.setHasFixedSize(true)
-        var strarr = ArrayList<String>()
-        mAdapter = MainRvAdapter(this, strarr);
+        var g = ArrayList<Guidance>()
+        mAdapter = MainRvAdapter(this, g)
         recyclerView.adapter = mAdapter
     }
 
@@ -334,7 +319,7 @@ class MainActivity : FragmentActivity(), OnMapReadyCallback {
                     node.coordinate.y,
                     node.coordinate.x
             ) //node 좌표 출력
-            marker.icon = OverlayImage.fromResource(R.drawable.guidance_node_green)
+            marker.icon = OverlayImage.fromResource(R.drawable.guidance_node)
             //marker.icon = MarkerIcons.BLACK //색을 선명하게 하기 위해 해줌
             //marker.iconTintColor = Color.BLACK //색 덧입히기
             marker.width = 80
@@ -358,7 +343,7 @@ class MainActivity : FragmentActivity(), OnMapReadyCallback {
         }
         path.coords = pathArr
         path.map = naverMap
-        path.setColor(Color.rgb(255, 192, 0));
+        path.setColor(Color.rgb(3, 107, 252));
         path.setWidth(30);
         path.outlineColor = Color.LTGRAY
         path.outlineWidth = 5
