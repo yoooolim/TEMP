@@ -6,6 +6,7 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.PathOverlay
 import com.naver.maps.map.util.MarkerIcons
 
 class Realtime_engine {
@@ -24,8 +25,10 @@ class Realtime_engine {
 
     var timestamp = 0
     var crossroad_check = 0
+    var marker: Marker? = null
 
     fun Real_engine(naverMap: NaverMap, location: Location) {
+        marker = Marker() //좌표
 
         println("Fixed Sliding Window Viterbi (window size: 3)")
 
@@ -59,6 +62,7 @@ class Realtime_engine {
             FSWViterbi.setMatched_sjtp(max_last_candi) //가장 ep가 높은 candidate 매칭
 
             subMatching.add(max_last_candi)
+            if(marker!!.map!=null) marker!!.map=null
             printMatched(subMatching, Color.GREEN, 50, naverMap) // 매칭: 초록색
             subMatching.clear()
 
@@ -167,32 +171,21 @@ class Realtime_engine {
             }
         }
         //비터비 끝//
-
     }
 
 
     fun printMatched(matched: ArrayList<Candidate>, COLOR: Int, SIZE: Int, naverMap: NaverMap) {
-        for (i in matched.indices) { //indices 또는 index사용
-            val marker = Marker() //좌표
-            marker.position = LatLng(
-                    matched.get(i).point.y,
-                    matched.get(i).point.x
-            ) //node 좌표 출력
-            marker.icon = MarkerIcons.BLACK //색을 선명하게 하기 위해 해줌
-            marker.iconTintColor = COLOR //색 덧입히기
-            marker.width = SIZE
-            marker.height = SIZE
-            // 마커가 너무 커서 크기 지정해줌
-            marker.map = naverMap //navermap에 출력
-        } //모든 노드 출력
+        marker!!.position = LatLng(
+                matched.get(matched.size-1).point.y,
+                matched.get(matched.size-1).point.x
+        ) //node 좌표 출력
+        marker!!.icon = MarkerIcons.BLACK //색을 선명하게 하기 위해 해줌
+        marker!!.iconTintColor = COLOR //색 덧입히기
+        marker!!.width = SIZE
+        marker!!.height = SIZE
+        // 마커가 너무 커서 크기 지정해줌
+        marker!!.map = naverMap //navermap에 출력
 
-        var cameraUpdate = CameraUpdate.scrollAndZoomTo(
-                LatLng(
-                        matched.get(0).point.y,
-                        matched.get(0).point.x
-                ), 18.0
-        )
-        naverMap.moveCamera(cameraUpdate)
 
         //카메라 이동
     }

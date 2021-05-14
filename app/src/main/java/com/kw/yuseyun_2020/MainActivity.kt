@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.graphics.Color
+import android.graphics.PointF
 import android.location.Location
 import android.os.Bundle
 import android.os.Looper
@@ -273,20 +274,20 @@ class MainActivity : FragmentActivity(), OnMapReadyCallback {
         Realtime_engine().Real_engine(naverMap, location)
         //실제 GPS 하나씩 받아서 넘겨주기
 
+
         // 음성 턴바이턴 안내
         speechGuidance()
 
         val myLocation = LatLng(location.latitude, location.longitude)
-        val marker = Marker()
-        marker.position = myLocation
-        //marker.captionText = "위도: ${location.latitude}, 경도: ${location.longitude}"
-        marker.map = naverMap
-        //마커
-        val cameraUpdate = CameraUpdate.scrollTo(myLocation)
-        naverMap.moveCamera(cameraUpdate)
-        naverMap.maxZoom = 18.0
-        naverMap.minZoom = 5.0
-        //marker.map = null
+
+        val locationOverlay = naverMap.locationOverlay
+        locationOverlay.isVisible = true
+        locationOverlay.position = LatLng(location.latitude, location.longitude)
+        locationOverlay.bearing = 90f
+        locationOverlay.iconWidth = 80
+        locationOverlay.iconHeight = 80
+        locationOverlay.circleRadius = 300
+
     }
     fun speechGuidance () {
         var currentPoint = FSWViterbi.getMatched_sjtp().get(FSWViterbi.getMatched_sjtp().size-1).point
