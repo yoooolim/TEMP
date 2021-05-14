@@ -186,13 +186,6 @@ class Realtime_engine {
             marker.map = naverMap //navermap에 출력
         } //모든 노드 출력
 
-        var cameraUpdate = CameraUpdate.scrollAndZoomTo(
-                LatLng(
-                        matched.get(0).point.y,
-                        matched.get(0).point.x
-                ), 18.0
-        )
-        naverMap.moveCamera(cameraUpdate)
 
         //카메라 이동
     }
