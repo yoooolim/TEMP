@@ -187,6 +187,7 @@ class FirstActivity : FragmentActivity(), OnMapReadyCallback {
     fun pathFind() {
         val dir = filesDir.absolutePath //파일절대경로
         FileIO.setDir(dir)
+        FileIO.generateRoadNetwork()
 
         var routeObject = Mapmatching_engine(naverMap)
         var route : ArrayList<Int>

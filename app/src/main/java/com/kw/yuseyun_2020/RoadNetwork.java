@@ -145,20 +145,21 @@ public class RoadNetwork {
      *되는 루트 →, ↑, ↗,↘
      *안되는 루트: ←, ↓, ↙, ↖
      * */
-    public static ArrayList<Point> routePoints (int testNo) {
+
+    /*public static ArrayList<Point> routePoints (int testNo) {
         ArrayList<Point> routePoints = new ArrayList<>();
 
         if(testNo == 1){
-            int[] routeNodes = { 0, 10, 7, 9, 15, 14/*, 27, 50, 48, 40, 47, 46, 45, 58 */};
+            int[] routeNodes = { 0, 10, 7, 9, 15, 14*//*, 27, 50, 48, 40, 47, 46, 45, 58 *//*};
             for (int i=0; i<routeNodes.length-1; i++) {
                 routeNodeArrayList.add(getNode(routeNodes[i])); /// 새로 추가!
                 Link routelink = getLink(routeNodes[i], routeNodes[i+1]); //두 노드를 끝으로 하는 링크 반환
                 routePoints.addAll(getInvolvingPointList(getNode(routeNodes[i]).getCoordinate(),
                         getNode(routeNodes[i+1]).getCoordinate(), routelink.getWeight()));
 
-                /*
+                *//*
                 routePoints.addAll(getInvolvingPointList(getNode(routelink.getStartNodeID()).getCoordinate(),
-                        getNode(routelink.getEndNodeID()).getCoordinate()));*/
+                        getNode(routelink.getEndNodeID()).getCoordinate()));*//*
             }
             routeNodeArrayList.add(getNode(routeNodes[routeNodes.length-1])); // 새로추가!
         } else if(testNo == 2){
@@ -169,9 +170,9 @@ public class RoadNetwork {
                 routePoints.addAll(getInvolvingPointList(getNode(routeNodes[i]).getCoordinate(),
                         getNode(routeNodes[i+1]).getCoordinate(), routelink.getWeight()));
 
-                /*
+                *//*
                 routePoints.addAll(getInvolvingPointList(getNode(routelink.getStartNodeID()).getCoordinate(),
-                        getNode(routelink.getEndNodeID()).getCoordinate()));*/
+                        getNode(routelink.getEndNodeID()).getCoordinate()));*//*
             }
 
             routeNodeArrayList.add(getNode(routeNodes[routeNodes.length-1])); // 새로 추가!
@@ -183,9 +184,9 @@ public class RoadNetwork {
                 routePoints.addAll(getInvolvingPointList(getNode(routeNodes[i]).getCoordinate(),
                         getNode(routeNodes[i+1]).getCoordinate(), routelink.getWeight()));
 
-                /*
+                *//*
                 routePoints.addAll(getInvolvingPointList(getNode(routelink.getStartNodeID()).getCoordinate(),
-                        getNode(routelink.getEndNodeID()).getCoordinate()));*/
+                        getNode(routelink.getEndNodeID()).getCoordinate()));*//*
             }
             routeNodeArrayList.add(getNode(routeNodes[routeNodes.length-1])); // 새로 추가!
         } else if(testNo == 4){
@@ -198,14 +199,32 @@ public class RoadNetwork {
                 routePoints.addAll(getInvolvingPointList(getNode(routeNodes[i]).getCoordinate(),
                         getNode(routeNodes[i+1]).getCoordinate(), routelink.getWeight()));
 
-                /*
+                *//*
                 routePoints.addAll(getInvolvingPointList(getNode(routelink.getStartNodeID()).getCoordinate(),
-                        getNode(routelink.getEndNodeID()).getCoordinate()));*/
+                        getNode(routelink.getEndNodeID()).getCoordinate()));*//*
             }
 
             routeNodeArrayList.add(getNode(routeNodes[routeNodes.length-1])); // 새로 추가!
         }
         routePointArrayList = routePoints;
+
+        return routePoints;
+    }
+*/
+    public static ArrayList<Point> routePoints (ArrayList<Node> nodes){
+        ArrayList<Point> routePoints = new ArrayList<>();
+        int[] routeNodes = new int[nodes.size()];
+        int j=0;
+        for(Node n : nodes){
+            routeNodes[j] = n.getNodeID();
+            j++;
+        }
+
+        for (int i=0; i<routeNodes.length-1; i++) {
+            Link routelink = getLink(routeNodes[i], routeNodes[i+1]); //두 노드를 끝으로 하는 링크 반환
+            routePoints.addAll(getInvolvingPointList(getNode(routeNodes[i]).getCoordinate(),
+                    getNode(routeNodes[i+1]).getCoordinate(), routelink.getWeight()));
+        }
 
         return routePoints;
     }

@@ -79,16 +79,17 @@ class Mapmatching_engine(naverMap: NaverMap) {
         //신기한 사실 = get,set 함수를 불러오지 않아도 알아서 척척박사님 알아맞춰보세요
         //여기까지 도로네트워크 생성
 
-        getNodePrint(naverMap)
+        //getNodePrint(naverMap)
 
         // GPS points와 routePoints를 저장할 ArrayList생성
         val gpsPointArrayList: ArrayList<GPSPoint> = ArrayList()
-        val routePointArrayList: ArrayList<Node> // 실제 경로의 points!
+        val routePointArrayList: ArrayList<Point> // 실제 경로의 points!
         val subMatching: ArrayList<Candidate> = ArrayList()
 
         // test 번호에 맞는 routePoints생성
 
-        routePointArrayList = RoadNetwork.routeNodeArrayList
+        //routePointArrayList = RoadNetwork.routeNodeArrayList
+        routePointArrayList = RoadNetwork.routePoints(RoadNetwork.routeNodeArrayList)
 
         // window size만큼의 t-window, ... , t-1, t에서의 candidates의 arrayList
         val arrOfCandidates: ArrayList<ArrayList<Candidate>> = ArrayList()
@@ -100,8 +101,8 @@ class Mapmatching_engine(naverMap: NaverMap) {
         // 3: x, y 모두 uniform하게     | 4: 교수님이 말한 평균 4 방식
         val gpsGenMode = 2
         println("Fixed Sliding Window Viterbi (window size: 3)")
-        for (i in routePointArrayList.indices step (5)) {
-            var point: Point = routePointArrayList.get(i).coordinate
+        for (i in routePointArrayList.indices step (1)) {
+            var point: Point = routePointArrayList.get(i)
             //println("routePoint: " + point)
             printPoint(point, Color.YELLOW, naverMap)
         }
@@ -109,9 +110,9 @@ class Mapmatching_engine(naverMap: NaverMap) {
         var crossroad_check = 0
 
         ////////////////////반복문 - gps 생성////////////////////////////////
-        for (i in routePointArrayList.indices step (5)) {
+        for (i in routePointArrayList.indices step (1)) {
             // 오래 걸리는 작업 수행부분
-            var point: Point = routePointArrayList.get(i).coordinate
+            var point: Point = routePointArrayList.get(i)
             val gpsPoint = GPSPoint(
                     timestamp,
                     point,
