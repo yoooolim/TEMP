@@ -8,6 +8,8 @@ import android.graphics.PointF
 import android.location.Location
 import android.os.Bundle
 import android.os.Looper
+import android.speech.tts.TextToSpeech
+import android.speech.tts.TextToSpeech.ERROR
 import android.util.Log
 import android.util.Pair
 import android.view.View
@@ -36,15 +38,19 @@ import com.naver.maps.map.overlay.PathOverlay
 import com.naver.maps.map.util.MarkerIcons
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import kotlinx.android.synthetic.main.activity_main.*
+import org.w3c.dom.Text
 
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : FragmentActivity(), OnMapReadyCallback {
 
     val permission_request = 99
 
+    lateinit var tts:TextToSpeech
 
     lateinit var mAdapter: MainRvAdapter
     val lm = LinearLayoutManager(this)
@@ -125,15 +131,23 @@ class MainActivity : FragmentActivity(), OnMapReadyCallback {
                 if (main_panel.panelState == SlidingUpPanelLayout.PanelState.EXPANDED) {
                     val lp = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT)
                     recyclerView.layoutParams = lp
-                    System.out.println("open!")
+                    //System.out.println("open!")
                 } else {
-                    val lp = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 800)
+                    val lp = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 200)
                     recyclerView.layoutParams = lp
-                    System.out.println("closed!")
+                    //System.out.println("closed!")
                 }
             }
         })
 
+        // textToSpeech 초기화
+        tts = TextToSpeech(this, object: TextToSpeech.OnInitListener {
+            override fun onInit (status :Int) {
+                if (status != ERROR) {
+                    tts.language = Locale.KOREAN
+                }
+            }
+        })
     }
     fun setAdapter() {
         //mAdapter.addSentences(generateSentenceList());
@@ -260,12 +274,12 @@ class MainActivity : FragmentActivity(), OnMapReadyCallback {
         Realtime_engine().Real_engine(naverMap, location)
         //실제 GPS 하나씩 받아서 넘겨주기
 
-/*        val myLocation = LatLng(location.latitude, location.longitude)
-        val marker = Marker()
-        marker.position = myLocation
-        //marker.captionText = "위도: ${location.latitude}, 경도: ${location.longitude}"
-        marker.map = naverMap
-        //마커*/
+
+        // 음성 턴바이턴 안내
+        speechGuidance()
+
+        val myLocation = LatLng(location.latitude, location.longitude)
+
         val locationOverlay = naverMap.locationOverlay
         locationOverlay.isVisible = true
         locationOverlay.position = LatLng(location.latitude, location.longitude)
@@ -275,7 +289,40 @@ class MainActivity : FragmentActivity(), OnMapReadyCallback {
         locationOverlay.circleRadius = 300
 
     }
+    fun speechGuidance () {
+        var currentPoint = FSWViterbi.getMatched_sjtp().get(FSWViterbi.getMatched_sjtp().size-1).point
 
+        for(routeNode in RoadNetwork.routeNodeArrayList) {
+            if (Calculation.calDistance(currentPoint, routeNode.coordinate) < 10) {
+                for (g in ArrOfGuidance) {
+                    if (g.nodeID == routeNode.nodeID && !g.isPassed) {
+                        // 음성안내
+                        Toast.makeText(this, g.speechSentence,Toast.LENGTH_LONG).show()
+                        tts.setPitch(1.0f)      // 음성 톤은 기본 설정
+                        tts.setSpeechRate(1.0f)   // 읽는 속도를 0.5빠르기로 설정
+                        // editText에 있는 문장을 읽는다.
+                        tts.speak(g.speechSentence,TextToSpeech.QUEUE_FLUSH, null);
+
+                        var RVposition  = 0
+                        // 리사이클러뷰 특정위치로 스크롤
+                        if (g.index.contentEquals("출발")){
+                            RVposition = 0
+                        } else if(g.index.contentEquals("도착")) {
+                            RVposition = ArrOfGuidance.size-1
+                        } else {
+                            RVposition = Integer.parseInt(g.index)
+                        }
+
+                        recyclerView.scrollToPosition(RVposition)
+
+                        // 지나간 안내라고 표시하기
+                        g.isPassed  = true
+
+                    }
+                }
+            }
+        }
+    }
     fun dataInit() {
         System.out.println("===== [YSY] Map-matching PilotTest 2 =====")
 
