@@ -19,8 +19,6 @@ class Mapmatching_engine(naverMap: NaverMap) {
 
     fun for_route(naverMap: NaverMap, dir:String, start : Int, end : Int): ArrayList<Int> {
 
-        FileIO.generateRoadNetwork()
-
         // Link와 Node를 바탕으로 Adjacent List 구축
         val heads: ArrayList<AdjacentNode> = ArrayList()
         for (i in RoadNetwork.nodeArrayList.indices) {

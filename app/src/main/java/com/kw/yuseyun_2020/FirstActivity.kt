@@ -196,30 +196,29 @@ class FirstActivity : FragmentActivity(), OnMapReadyCallback {
     fun pathFind() {
         val dir = filesDir.absolutePath //파일절대경로
         FileIO.setDir(dir)
+        FileIO.generateRoadNetwork()
 
         var routeObject = Mapmatching_engine(naverMap)
-        var route : ArrayList<Int>
+        var route: ArrayList<Int>
         var startNodeID = RoadNetwork.getNodeIDByPoiName(in_depature)
         var endNodeID = RoadNetwork.getNodeIDByPoiName(in_destination)
-        route = routeObject.for_route(naverMap,dir,startNodeID,endNodeID);
-        for(i in 0 until route.size){
-        route = routeObject.for_route(naverMap,dir,in_depature.toInt(),in_destination.toInt());
+        route = routeObject.for_route(naverMap, dir, startNodeID, endNodeID);
 
         // 0513 유네 추가 .. 뒤로가기로 여러번의 테스트 가능하도록 데이터 비움
         if (!RoadNetwork.getRouteNodeArrayList().isEmpty()) RoadNetwork.routeNodeArrayList.clear();
-        for(i in 0..route.size-1){
+        for (i in 0..route.size - 1) {
             RoadNetwork.routeNodeArrayList.add(RoadNetwork.getNode(route.get(i)));
         }
-        var str : StringBuilder? = StringBuilder()
+        var str: StringBuilder? = StringBuilder()
         str?.append("Node : ")
-        for(i in 1..route.size){
-            str?.append(route.get(i-1))
+        for (i in 1..route.size) {
+            str?.append(route.get(i - 1))
             str?.append(" ")
         }
         str?.append("\n")
         str?.append("Length : ")
         str?.append(routeObject.route_length)
-        var t1 = Toast.makeText(this,str,Toast.LENGTH_SHORT);
+        var t1 = Toast.makeText(this, str, Toast.LENGTH_SHORT);
         t1.show()
     }
 
