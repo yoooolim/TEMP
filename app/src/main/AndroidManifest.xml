@@ -16,7 +16,8 @@
         android:roundIcon="@mipmap/tbtbtbc"
         android:supportsRtl="true"
         android:theme="@style/Theme.Yuseyun_2020">
-        <activity android:name=".FirstActivity">
+        <activity android:name=".FirstActivity"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

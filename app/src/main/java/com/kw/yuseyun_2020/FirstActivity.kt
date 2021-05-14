@@ -1,27 +1,22 @@
 package com.kw.yuseyun_2020
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.graphics.Color
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.annotation.UiThread
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.FragmentActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -31,10 +26,7 @@ import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.overlay.PathOverlay
-import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import kotlinx.android.synthetic.main.activity_first.*
-import kotlinx.android.synthetic.main.activity_main.*
-import java.lang.StringBuilder
 
 class FirstActivity : FragmentActivity(), OnMapReadyCallback {
 
@@ -43,18 +35,24 @@ class FirstActivity : FragmentActivity(), OnMapReadyCallback {
 
     val permission_request = 99
 
+    var path: PathOverlay? = null
+
     //private val candidate: Candidate = Candidate()
     lateinit var naverMap: NaverMap
+
+    //var imm : InputMethodManager?=null
 
     var permissions = arrayOf(
             android.Manifest.permission.ACCESS_FINE_LOCATION,
             android.Manifest.permission.ACCESS_COARSE_LOCATION
     )// 권한 가져오기
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) { //액티비티가 최초 실행 되면 이곳을 수행한다.
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_first)
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        //imm = getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         if (isPermitted()) {
                 startProcess()
@@ -65,28 +63,49 @@ class FirstActivity : FragmentActivity(), OnMapReadyCallback {
         map_matching_button.visibility = View.INVISIBLE
 
         map_matching_button.setOnClickListener {
+            if(!in_depature.equals("")&&!in_destination.equals("")) {
             val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+            startActivity(intent)}
+            else{
+                var t1 = Toast.makeText(this,"출발지 혹은 도착지 미입력",Toast.LENGTH_SHORT);
+                t1.show()
+            }
         }
 
         route_finding_button.setOnClickListener{
             in_depature = depature.text.toString();
             in_destination = destination.text.toString();
             if(in_depature.equals("")){
-                var t1 = Toast.makeText(this,"출발지를 입력해 주셔야죠~",Toast.LENGTH_SHORT);
+                var t1 = Toast.makeText(this, "출발지를 입력해 주셔야죠~", Toast.LENGTH_SHORT);
+                depature.requestFocus()
                 t1.show();
             }
-            if(in_destination.equals("")){
-                var t1 = Toast.makeText(this,"도착지를 입력해 주셔야죠~",Toast.LENGTH_SHORT);
+            else if(in_destination.equals("")){
+                var t1 = Toast.makeText(this, "도착지를 입력해 주셔야죠~", Toast.LENGTH_SHORT);
+                destination.requestFocus()
                 t1.show();
             }
-            var path = pathFind()
-            printNodesToPath()
-            printStartAndEndPOIs()
-            map_matching_button.visibility = View.VISIBLE
+            else {
+                if (path?.map != null) path!!.map = null
+                pathFind()
+                printNodesToPath()
+                printStartAndEndPOIs()
+                map_matching_button.visibility = View.VISIBLE
+            }
+        }
+    }
+/* view 누르면 키보드 사라지게 하려다가 못함
+    fun hideKeyboard(v: View){
+        if(v!=null){
+            imm?.hideSoftInputFromWindow(v.windowToken,0)
         }
     }
 
+    fun showKeyboard(v: View){
+        imm?.showSoftInput(depature,0)
+        imm?.showSoftInput(destination,0)
+    }
+*/
     //권한을 허락 받아야함
     private fun isPermitted(): Boolean {
         for (perm in permissions) {
@@ -96,8 +115,6 @@ class FirstActivity : FragmentActivity(), OnMapReadyCallback {
         }
         return true
     }
-
-
 
     fun startProcess() {
         val fm = supportFragmentManager
@@ -226,19 +243,20 @@ class FirstActivity : FragmentActivity(), OnMapReadyCallback {
     }
 
     fun printNodesToPath() {
-        val path = PathOverlay()
+        path = PathOverlay()
         var pathArr = ArrayList<LatLng>()
         var i = 0
         for (node in RoadNetwork.getRouteNodeArrayList()) {
             pathArr.add(LatLng(RoadNetwork.getNode(node.nodeID).coordinate.y, RoadNetwork.getNode(node.nodeID).coordinate.x))
         }
-        path.coords = pathArr
-        path.map = naverMap
-        path.setColor(Color.rgb(3,107,252));
-        path.setWidth(30);
-        path.outlineColor = Color.LTGRAY
-        path.outlineWidth = 5
-        path.patternImage = OverlayImage.fromResource(R.drawable.route_pattern)
+        path!!.coords = pathArr
+        path!!.map = naverMap
+        path!!.setColor(Color.rgb(3, 107, 252));
+        path!!.setWidth(30);
+        path!!.outlineColor = Color.LTGRAY
+        path!!.outlineWidth = 5
+        path!!.patternImage = OverlayImage.fromResource(R.drawable.route_pattern)
+
     }
     fun printStartAndEndPOIs() {
         // 출발점 표시
