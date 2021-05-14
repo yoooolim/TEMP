@@ -168,20 +168,19 @@ class MainActivity : FragmentActivity(), OnMapReadyCallback {
 
     @UiThread
     override fun onMapReady(naverMap: NaverMap) {
-        /*
+        this.naverMap = naverMap
+
         val cameraPosition = CameraPosition(
                 LatLng(37.618235, 127.061945),  // 위치 지정
                 16.0 // 줌 레벨
         )
-        naverMap.cameraPosition = cameraPosition*/
-        this.naverMap = naverMap
-
-        /*fusedLocationProviderClient =
+        naverMap.cameraPosition = cameraPosition
+        fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(this) //gps 자동으로 받아오기
-        setUpdateLocationListner() //내위치를 가져오는 코드*/
+        setUpdateLocationListner() //내위치를 가져오는 코드
 
         val dir = filesDir.absolutePath //파일절대경로
-        Mapmatching_engine(naverMap).engine(naverMap, dir) //GPS 생성 매칭
+        //Mapmatching_engine(naverMap).engine(naverMap, dir) //GPS 생성 매칭
         //FixedGPS(naverMap).fixengine(naverMap, dir) //고정된 GPS 매칭
         //engine 부분 옮기기
 
@@ -257,7 +256,7 @@ class MainActivity : FragmentActivity(), OnMapReadyCallback {
 
     fun setLastLocation(location: Location) {
 
-        //Realtime_engine().Real_engine(naverMap, location)
+        Realtime_engine().Real_engine(naverMap, location)
         //실제 GPS 하나씩 받아서 넘겨주기
 
         val myLocation = LatLng(location.latitude, location.longitude)

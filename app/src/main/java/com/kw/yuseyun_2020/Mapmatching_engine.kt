@@ -81,12 +81,12 @@ class Mapmatching_engine(naverMap: NaverMap) {
 
         // GPS points와 routePoints를 저장할 ArrayList생성
         val gpsPointArrayList: ArrayList<GPSPoint> = ArrayList()
-        val routePointArrayList: ArrayList<Node> // 실제 경로의 points!
+        val routePointArrayList: ArrayList<Point> // 실제 경로의 points!
         val subMatching: ArrayList<Candidate> = ArrayList()
 
         // test 번호에 맞는 routePoints생성
 
-        routePointArrayList = RoadNetwork.routeNodeArrayList
+        routePointArrayList = RoadNetwork.routePoints(RoadNetwork.routeNodeArrayList)
 
         // window size만큼의 t-window, ... , t-1, t에서의 candidates의 arrayList
         val arrOfCandidates: ArrayList<ArrayList<Candidate>> = ArrayList()
@@ -99,7 +99,7 @@ class Mapmatching_engine(naverMap: NaverMap) {
         val gpsGenMode = 2
         println("Fixed Sliding Window Viterbi (window size: 3)")
         for (i in routePointArrayList.indices step (5)) {
-            var point: Point = routePointArrayList.get(i).coordinate
+            var point: Point = routePointArrayList.get(i)
             //println("routePoint: " + point)
             printPoint(point, Color.YELLOW, naverMap)
         }
@@ -109,7 +109,7 @@ class Mapmatching_engine(naverMap: NaverMap) {
         ////////////////////반복문 - gps 생성////////////////////////////////
         for (i in routePointArrayList.indices step (5)) {
             // 오래 걸리는 작업 수행부분
-            var point: Point = routePointArrayList.get(i).coordinate
+            var point: Point = routePointArrayList.get(i)
             val gpsPoint = GPSPoint(
                     timestamp,
                     point,
