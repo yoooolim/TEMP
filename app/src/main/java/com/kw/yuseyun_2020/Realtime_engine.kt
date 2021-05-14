@@ -186,13 +186,6 @@ class Realtime_engine {
         // 마커가 너무 커서 크기 지정해줌
         marker!!.map = naverMap //navermap에 출력
 
-        var cameraUpdate = CameraUpdate.scrollAndZoomTo(
-                LatLng(
-                        matched.get(0).point.y,
-                        matched.get(0).point.x
-                ), 18.0
-        )
-        naverMap.moveCamera(cameraUpdate)
 
         //카메라 이동
     }
