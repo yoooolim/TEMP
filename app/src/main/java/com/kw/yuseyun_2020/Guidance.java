@@ -6,6 +6,21 @@ public class Guidance {
     private int nodeID;
     private int direction;
     private String index; // 출발, 도착, 1, 2, 3, 4 .. 저장
+    private boolean passed;
+
+    public String getSpeechSentence() {
+        return speechSentence;
+    }
+
+    private String speechSentence;
+
+    public void setPassed(boolean passed) {
+        this.passed = passed;
+    }
+
+    public boolean isPassed() {
+        return passed;
+    }
 
     public String getIndex() {
         return index;
@@ -19,6 +34,13 @@ public class Guidance {
         this.sentence = sentence;
         this.nodeID = nodeID;
         this.direction = direction;
+        if (direction == -2) {
+            this.speechSentence = "경로 안내를 시작합니다.";
+        } else if (direction == -3) {
+            this.speechSentence = "목적지 도착입니다. 경로 안내를 종료합니다.";
+        } else {
+            this.speechSentence = "잠시 후 " + sentence + "입니다.";
+        }
     }
 
     public int getDirection() {
@@ -42,9 +64,9 @@ public class Guidance {
         return nodeID;
     }
 
-    public void setNodeID(int nodeID) {
+    /*public void setNodeID(int nodeID) {
         this.nodeID = nodeID;
-    }
+    }*/
 
     @Override
     public String toString () {

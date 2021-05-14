@@ -11,7 +11,7 @@
     sothree:umanoDragView="@id/swipe_tip"
     sothree:umanoScrollableView="@id/recyclerView"
     sothree:umanoOverlay="true"
-    sothree:umanoPanelHeight="300dp"
+    sothree:umanoPanelHeight="120dp"
     sothree:umanoShadowHeight="10dp"
     tools:context=".MainActivity">
 
@@ -60,7 +60,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="260dp"/>
+                android:layout_height="75dp"/>
         </RelativeLayout>
 
     </LinearLayout>
