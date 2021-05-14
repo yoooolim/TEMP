@@ -25,7 +25,7 @@ class Realtime_engine {
     var timestamp = 0
     var crossroad_check = 0
 
-    fun Real_engine(naverMap: NaverMap, location: Location, roadNetwork: RoadNetwork) {
+    fun Real_engine(naverMap: NaverMap, location: Location) {
 
         println("Fixed Sliding Window Viterbi (window size: 3)")
 
