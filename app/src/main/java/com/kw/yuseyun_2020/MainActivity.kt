@@ -56,7 +56,7 @@ class MainActivity : FragmentActivity(), OnMapReadyCallback {
     val lm = LinearLayoutManager(this)
 
     lateinit var ArrOfGuidance: ArrayList<Guidance>
-
+    var guidanceStart = false;
     var index = 1;
 
 
@@ -295,23 +295,29 @@ class MainActivity : FragmentActivity(), OnMapReadyCallback {
         for(routeNode in RoadNetwork.routeNodeArrayList) {
             if (Calculation.calDistance(currentPoint, routeNode.coordinate) < 10) {
                 for (g in ArrOfGuidance) {
-                    if (g.nodeID == routeNode.nodeID && !g.isPassed) {
+                    if ((g.nodeID == routeNode.nodeID && !g.isPassed)) {
                         // 음성안내
-                        Toast.makeText(this, g.speechSentence,Toast.LENGTH_LONG).show()
+                        var RVposition = 0
+                        var speechStr = ""
+                        // 리사이클러뷰 특정위치로 스크롤
+                        if (g.index.contentEquals("1")){
+                            RVposition = 1
+                            speechStr = "경로 안내를 시작합니다. "+g.speechSentence
+                        } else if(g.index.contentEquals("도착")) {
+                            RVposition = ArrOfGuidance.size-1
+                            speechStr = g.speechSentence
+                        } else if (g.index.contentEquals("출발")){
+                            continue;
+                        } else{
+                            RVposition = Integer.parseInt(g.index)
+                            speechStr = g.speechSentence
+                        }
+
+                        Toast.makeText(this, speechStr,Toast.LENGTH_LONG).show()
                         tts.setPitch(1.0f)      // 음성 톤은 기본 설정
                         tts.setSpeechRate(1.0f)   // 읽는 속도를 0.5빠르기로 설정
                         // editText에 있는 문장을 읽는다.
-                        tts.speak(g.speechSentence,TextToSpeech.QUEUE_FLUSH, null);
-
-                        var RVposition  = 0
-                        // 리사이클러뷰 특정위치로 스크롤
-                        if (g.index.contentEquals("출발")){
-                            RVposition = 0
-                        } else if(g.index.contentEquals("도착")) {
-                            RVposition = ArrOfGuidance.size-1
-                        } else {
-                            RVposition = Integer.parseInt(g.index)
-                        }
+                        tts.speak(speechStr,TextToSpeech.QUEUE_FLUSH, null);
 
                         recyclerView.scrollToPosition(RVposition)
 
