@@ -6,6 +6,7 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.MarkerIcons
 import kotlin.properties.Delegates
 
@@ -276,10 +277,9 @@ class Mapmatching_engine(naverMap: NaverMap) {
                     matched.get(i).point.y,
                     matched.get(i).point.x
             ) //node 좌표 출력
-            marker.icon = MarkerIcons.BLACK //색을 선명하게 하기 위해 해줌
-            marker.iconTintColor = COLOR //색 덧입히기
-            marker.width = SIZE
-            marker.height = SIZE
+            marker.width = 30
+            marker.height = 30
+            marker.icon = OverlayImage.fromResource(R.drawable.matching)
             // 마커가 너무 커서 크기 지정해줌
             marker.map = naverMap //navermap에 출력
         } //모든 노드 출력

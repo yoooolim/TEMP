@@ -194,6 +194,7 @@ class MainActivity : FragmentActivity(), OnMapReadyCallback {
             LocationServices.getFusedLocationProviderClient(this) //gps 자동으로 받아오기
         setUpdateLocationListner() //내위치를 가져오는 코드
 
+
         val dir = filesDir.absolutePath //파일절대경로
         //Mapmatching_engine(naverMap).engine(naverMap, dir) //GPS 생성 매칭
         //FixedGPS(naverMap).fixengine(naverMap, dir) //고정된 GPS 매칭

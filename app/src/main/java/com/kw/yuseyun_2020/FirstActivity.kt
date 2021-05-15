@@ -27,6 +27,8 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.overlay.PathOverlay
 import kotlinx.android.synthetic.main.activity_first.*
+import java.util.concurrent.TimeUnit
+import kotlin.properties.Delegates
 
 class FirstActivity : FragmentActivity(), OnMapReadyCallback {
 
@@ -36,9 +38,11 @@ class FirstActivity : FragmentActivity(), OnMapReadyCallback {
     val permission_request = 99
 
     var path: PathOverlay? = null
+    var time = "";
 
     //private val candidate: Candidate = Candidate()
     lateinit var naverMap: NaverMap
+    var length by Delegates.notNull<Long>()
 
     //var imm : InputMethodManager?=null
 
@@ -90,6 +94,10 @@ class FirstActivity : FragmentActivity(), OnMapReadyCallback {
                 pathFind()
                 printNodesToPath()
                 printStartAndEndPOIs()
+                button_text1.text="  (추천) 가장 빠른 길\n"
+                button_text2.text="  "+time
+                button_text3.text="\n  "+length+" m"
+                //map_matching_button.text = "(추천) 가장 빠른 길\n\n"+time+"\n\n"+length+" m"
                 map_matching_button.visibility = View.VISIBLE
             }
         }
@@ -235,11 +243,15 @@ class FirstActivity : FragmentActivity(), OnMapReadyCallback {
             str?.append(route.get(i - 1))
             str?.append(" ")
         }
+        length = routeObject.route_length.toLong()
+        getTimeByLength(length)
+        /*
         str?.append("\n")
         str?.append("Length : ")
         str?.append(routeObject.route_length)
         var t1 = Toast.makeText(this, str, Toast.LENGTH_SHORT);
         t1.show()
+        */
     }
 
     fun printNodesToPath() {
@@ -288,5 +300,10 @@ class FirstActivity : FragmentActivity(), OnMapReadyCallback {
         marker_e.height = 120
         marker_e.map = naverMap //navermap에 출력
         //marker_e.captionText = "도착"
+    }
+    fun getTimeByLength( length : Long ){
+        val hours = TimeUnit.SECONDS.toHours(length)
+        val minute = TimeUnit.SECONDS.toMinutes(length) - TimeUnit.SECONDS.toHours(length) * 60
+        time = minute.toString()+"분"
     }
 }
