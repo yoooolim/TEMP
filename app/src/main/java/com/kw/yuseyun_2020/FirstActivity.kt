@@ -94,9 +94,9 @@ class FirstActivity : FragmentActivity(), OnMapReadyCallback {
                 pathFind()
                 printNodesToPath()
                 printStartAndEndPOIs()
-                button_text1.text="(추천) 가장 빠른 길\n"
-                button_text2.text=time
-                button_text3.text="\n"+length+" m"
+                button_text1.text="  (추천) 가장 빠른 길\n"
+                button_text2.text="  "+time
+                button_text3.text="\n  "+length+" m"
                 //map_matching_button.text = "(추천) 가장 빠른 길\n\n"+time+"\n\n"+length+" m"
                 map_matching_button.visibility = View.VISIBLE
             }
