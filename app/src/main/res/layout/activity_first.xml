@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".FirstActivity"
-    android:onClick="hideKeyboard">
+    tools:context=".FirstActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -92,19 +91,51 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/map_matching_button"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="150dp"
+            android:layout_weight="0.7"
             android:layout_gravity="center"
+            android:orientation="vertical"
+            android:gravity="left"
+            android:textAllCaps="false"
+            android:textColor="@color/blue"
             android:layout_margin="30dp"
-            android:background="@drawable/btn_bg_ex"
-            android:text="경로 안내 시작"
             android:visibility="invisible"
+            android:background="@drawable/btn_bg_ex"
+            android:id="@+id/map_matching_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:textColor="@color/blue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="\n"
+                android:textSize="5sp"/>
+            <TextView
+                android:textColor="@color/blue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/button_text1"
+                android:textSize="15sp"/>
+            <TextView
+                android:textColor="@color/blue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:id="@+id/button_text2"/>
+            <TextView
+                android:textColor="@color/blue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/button_text3"
+                android:textSize="15sp"/>
+
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
